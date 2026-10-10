@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panel administratora – Eduportal</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="https://platforma-eduportal.pages.dev/themes/faviconeduportal.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1d1d1f;--mute:#6e6e73;--soft:#f5f5f7;--line:#e5e5ea;--accent:#4b3bff;--accent2:#ff5fa2;--ok:#1a7f37;--warn:#b25e00;--r:24px}
+*{box-sizing:border-box;margin:0}
+body{min-height:100vh;font-family:Figtree,-apple-system,system-ui,sans-serif;color:var(--ink);background:var(--soft);-webkit-font-smoothing:antialiased;line-height:1.5}
+a{color:inherit;text-decoration:none}button{font-family:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+[hidden]{display:none!important}
+
+.bar{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px clamp(20px,4vw,56px);background:#000;color:#fff}
+.bar::before{content:"";position:absolute;width:420px;height:420px;left:-170px;top:-290px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));opacity:.85;pointer-events:none}
+.bar>*{position:relative}
+.brand{display:flex;align-items:center;gap:12px}.brand img{height:28px}
+.brand em{font-style:normal;font-weight:800;font-size:13px;letter-spacing:.06em;text-transform:uppercase;padding:4px 12px;border-radius:999px;background:#ffffff26}
+.bar .right{display:flex;gap:10px}
+.bar .btn{border-color:#fff;color:#fff}
+
+main{padding:44px clamp(20px,4vw,56px) 80px;max-width:1180px;margin:0 auto}
+h1{font-size:clamp(30px,4.4vw,44px);letter-spacing:-.03em;line-height:1.08;font-weight:800}
+h2{font-size:22px;letter-spacing:-.02em}
+.lead{color:var(--mute);font-size:18px;margin:8px 0 28px}
+.head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.card{background:#fff;border-radius:var(--r);padding:28px;box-shadow:0 1px 0 #0000000a}
+.rise{animation:rise .55s cubic-bezier(.2,.8,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
+.btn{position:relative;overflow:hidden;isolation:isolate;display:inline-flex;align-items:center;justify-content:center;padding:13px 26px;border-radius:999px;font:600 15px Figtree,sans-serif;border:2px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer;transition:color .35s,border-color .35s,transform .2s}
+.btn::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,var(--accent),var(--accent2));transform:scaleX(0);transform-origin:left;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+.btn:hover:not(:disabled),.btn:focus-visible{color:#fff;border-color:transparent}
+.btn:hover:not(:disabled)::before,.btn:focus-visible::before{transform:scaleX(1)}
+.btn:active{transform:scale(.97)}
+.btn.solid{background:var(--ink);color:#fff}
+.btn.sm{padding:8px 18px;font-size:14px}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+
+/* statystyki-filtry */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.stat{text-align:left;border:2px solid transparent;padding:22px;cursor:pointer;transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s,border-color .3s}
+.stat:hover{transform:translateY(-3px);box-shadow:0 22px 40px -26px #4b3bff66}
+.stat.on{border-color:var(--accent)}
+.stat b{display:block;font-size:40px;letter-spacing:-.03em;line-height:1}
+.stat span{color:var(--mute);font-weight:600;font-size:14px}
+.stat.hot b{background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+input[type=search]{width:100%;max-width:460px;padding:13px 16px;border-radius:14px;border:1.5px solid #d2d2d7;font:500 16px Figtree,sans-serif;color:var(--ink);background:#fff;transition:border-color .25s,box-shadow .25s;margin-bottom:18px}
+input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 4px #4b3bff22}
+
+.order{display:grid;grid-template-columns:1fr auto auto;gap:18px;align-items:center;padding:20px 0;border-top:1px solid var(--line);animation:rise .45s both}
+.order:first-child{border-top:0}
+.order h3{font-size:17px}.order small{display:block;color:var(--mute)}.order .who{color:var(--ink);font-weight:600;margin-top:2px}
+.badge{font-size:13px;font-weight:700;padding:5px 12px;border-radius:999px;white-space:nowrap}
+.b-new{background:#4b3bff14;color:var(--accent)}.b-wait{background:#b25e0018;color:var(--warn)}.b-ok{background:#1a7f3718;color:var(--ok)}.b-bad{background:#d7001514;color:#d70015}
+.empty{padding:36px 0;text-align:center;color:var(--mute)}
+
+/* loader */
+#boot{position:fixed;inset:0;z-index:50;background:var(--soft);display:grid;place-items:center;transition:opacity .4s,visibility .4s}
+#boot.off{opacity:0;visibility:hidden}
+#boot div{width:min(320px,70vw);display:grid;gap:12px}
+.sk{display:block;height:16px;border-radius:12px;background:linear-gradient(90deg,#e8e8ed 25%,#f7f7fa 50%,#e8e8ed 75%);background-size:220% 100%;animation:sk 1.3s ease-in-out infinite,skp 1.3s ease-in-out infinite}
+@keyframes sk{to{background-position:-220% 0}}
+@keyframes skp{50%{transform:scaleY(.8)}}
+.sk.w80{width:80%}.sk.w60{width:60%}.sk.w40{width:40%}.sk.h28{height:28px;border-radius:999px}
+.sk-row{display:grid;grid-template-columns:1fr 130px;gap:18px;align-items:center;padding:20px 0;border-top:1px solid var(--line)}
+.sk-row:first-child{border-top:0}.sk-row>div{display:grid;gap:10px}
+
+/* modale */
+.modal{position:fixed;inset:0;z-index:30;display:grid;place-items:center;padding:20px;background:#000000a6;backdrop-filter:blur(6px);opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
+.modal.show{opacity:1;visibility:visible}
+.modal .box{width:100%;max-width:560px;max-height:calc(100vh - 40px);overflow:auto;background:#fff;border-radius:var(--r);padding:30px;transform:translateY(24px) scale(.94);transition:transform .45s cubic-bezier(.3,1.4,.5,1)}
+.modal.show .box{transform:none}
+.modal h2{margin:12px 0 4px}
+.modal h4{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--mute);margin:20px 0 8px}
+.modal .sub{color:var(--mute);margin-bottom:16px}
+.dl{display:grid;grid-template-columns:auto 1fr;gap:6px 18px;font-size:15px}
+.dl dt{color:var(--mute)}.dl dd{margin:0;font-weight:600;overflow-wrap:anywhere;white-space:pre-wrap}
+.dl a{color:var(--accent)}
+.seg{display:flex;gap:8px;flex-wrap:wrap}
+.opt{border:1.5px solid #d2d2d7;background:#fff;border-radius:999px;padding:10px 16px;font-weight:600;font-size:14px;cursor:pointer;transition:all .25s}
+.opt:hover:not(:disabled){border-color:var(--ink)}
+.opt.cur{background:var(--ink);border-color:var(--ink);color:#fff;cursor:default}
+.opt:disabled{opacity:.6}
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:22px}
+
+/* wgrywanie plików */
+.drop{border:2px dashed #c7c7cc;border-radius:20px;padding:28px 16px;text-align:center;transition:border-color .3s,background .3s}
+.drop.over{border-color:var(--accent);background:#4b3bff0a}
+.drop b{display:block;font-size:17px}.drop span{color:var(--mute);font-size:14px}
+.drop .seg{justify-content:center;margin-top:14px}
+#zfiles{list-style:none;padding:0;margin:14px 0 0;max-height:210px;overflow:auto}
+#zfiles li{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:8px 4px;border-top:1px solid var(--line);font-size:14px;animation:rise .3s both}
+#zfiles li:first-child{border-top:0}
+#zfiles .n{overflow-wrap:anywhere}#zfiles .s{color:var(--mute);white-space:nowrap}
+#zfiles button{border:0;background:none;color:#d70015;font-weight:700;cursor:pointer;font-size:18px;line-height:1;padding:0 6px}
+#zsum{margin-top:10px;color:var(--mute);font-size:14px;font-weight:600}
+.prog{margin-top:18px}
+.prog .t{height:12px;border-radius:99px;background:#e8e8ed;overflow:hidden}
+.prog .t i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .25s}
+.prog .t.indet i{width:100%!important;background:linear-gradient(90deg,#e8e8ed 25%,#c9c9d1 50%,#e8e8ed 75%);background-size:220% 100%;animation:sk 1.1s linear infinite}
+.prog span{display:block;margin-top:8px;font-weight:600;font-size:14px}
+
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,40px);opacity:0;background:var(--ink);color:#fff;padding:12px 22px;border-radius:999px;font-weight:600;font-size:15px;transition:all .45s cubic-bezier(.3,1.4,.5,1);z-index:60;pointer-events:none;text-align:center}
+.toast.show{transform:translate(-50%,0);opacity:1}
+@media(max-width:860px){.stats{grid-template-columns:repeat(2,1fr)}.order{grid-template-columns:1fr auto}.order .btn{grid-column:1/-1}.dl{grid-template-columns:1fr;gap:2px}.dl dd{margin-bottom:8px}.sk-row{grid-template-columns:1fr 90px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="boot" aria-label="Ładowanie"><div><i class="sk h28 w60"></i><i class="sk"></i><i class="sk w80"></i></div></div>
+
+<header class="bar">
+ <a class="brand" href="/" aria-label="Eduportal"><img src="https://platforma-eduportal.pages.dev/themes/eduportal_biale.svg" alt="Eduportal"><em>Admin</em></a>
+ <div class="right"><a class="btn sm" id="to-portal" href="/moj-eduportal">Mój Eduportal</a><button class="btn sm" id="logout">Wyloguj się</button></div>
+</header>
+
+<main>
+ <div class="head"><div><h1>Zamówienia</h1><p class="lead">Zgłoszenia użytkowników. Kliknij zamówienie, aby zmienić status.</p></div><button class="btn sm" id="refresh">Odśwież</button></div>
+ <div class="stats" id="stats"></div>
+ <input type="search" id="q" placeholder="Szukaj: imię, e-mail, książka, klasa, dział…" aria-label="Szukaj zamówień">
+ <div class="card" id="list"></div>
+</main>
+
+<!-- szczegóły zamówienia -->
+<div class="modal" id="d-modal" role="dialog" aria-modal="true" aria-label="Szczegóły zamówienia">
+ <div class="box"><div id="d-body"></div><div class="actions"><button class="btn" id="d-close">Zamknij</button></div></div>
+</div>
+
+<!-- realizacja: pliki → ZIP → Storage -->
+<div class="modal" id="z-modal" role="dialog" aria-modal="true" aria-label="Zrealizuj zamówienie">
+ <div class="box">
+  <h2>Zrealizuj zamówienie</h2>
+  <p class="sub" id="z-sub"></p>
+  <div class="drop" id="zdrop">
+   <b>Przeciągnij tu pliki lub foldery</b><span>zostaną spakowane do jednego ZIP-a</span>
+   <div class="seg"><button class="btn sm" id="add-files" type="button">Dodaj pliki</button><button class="btn sm" id="add-dir" type="button">Dodaj folder</button></div>
+  </div>
+  <input type="file" id="in-files" multiple hidden><input type="file" id="in-dir" webkitdirectory hidden>
+  <ul id="zfiles"></ul><div id="zsum"></div>
+  <div class="prog" id="prog" hidden><div class="t" id="pt"><i id="pi"></i></div><span id="ptxt"></span></div>
+  <div class="actions"><button class="btn" id="z-cancel">Anuluj</button><button class="btn solid" id="z-go">Spakuj i zrealizuj</button></div>
+ </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="/supabase-config.js"></script>
+<script>
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const {EP,sb}=window,esc=EP.esc,fmt=EP.fmt,ST=EP.ST;
+let all=[],filter=null,q='',cur=null,leaving=false,zfiles=[],zbusy=false;
+
+const skRows=n=>Array.from({length:n},()=>'<div class="sk-row"><div><i class="sk w60"></i><i class="sk w40"></i></div><i class="sk h28"></i></div>').join('');
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('show'),2600)}
+const who=o=>o.profiles?.first_name||o.profiles?.email||'(brak danych)';
+const size=b=>b<1048576?Math.max(1,Math.round(b/1024))+' KB':(b/1048576).toFixed(1)+' MB';
+
+/* ---------- lista ---------- */
+function render(){
+  const cnt=k=>all.filter(o=>o.status===k).length;
+  const defs=[['new','Nowe zgłoszenia',1],['pending_payment','Oczekują na płatność'],['completed','Zrealizowane'],['cancelled','Anulowane']];
+  $('#stats').innerHTML=defs.map(([k,l,hot])=>`<button class="card stat ${filter===k?'on':''} ${hot&&cnt(k)?'hot':''}" data-f="${k}"><b>${cnt(k)}</b><span>${l}</span></button>`).join('');
+  const t=q.toLowerCase();
+  const list=all.filter(o=>(!filter||o.status===filter)&&(!t||[o.book,o.class_name,o.section,o.school_type,o.profiles?.first_name,o.profiles?.email].some(x=>(x||'').toLowerCase().includes(t))));
+  $('#list').innerHTML=list.length?list.map((o,i)=>`
+   <div class="order" style="animation-delay:${Math.min(i,12)*50}ms">
+    <div><h3>${esc(o.book)}</h3><small>${esc(o.school_type)} · kl. ${esc(o.class_name)} · dział: ${esc(o.section)}</small><small class="who">${esc(who(o))} · ${esc(o.profiles?.email||'')} · ${fmt(o.created_at)}</small></div>
+    <span class="badge ${ST[o.status].cls}">${ST[o.status].label}</span>
+    <button class="btn sm solid" data-id="${esc(o.id)}">Otwórz</button>
+   </div>`).join(''):`<div class="empty">${all.length?'Nic nie pasuje do filtrów.':'Brak zamówień.'}</div>`;
+}
+async function load(){
+  $('#list').innerHTML=skRows(4);
+  const {data,error}=await sb.from('orders').select('*, profiles(first_name,email,created_at)').order('created_at',{ascending:false});
+  if(error){$('#list').innerHTML='<div class="empty">Nie udało się pobrać zamówień. Sprawdź, czy uruchomiłeś supabase.sql.</div>';return}
+  all=data;render();
+}
+$('#stats').addEventListener('click',e=>{const c=e.target.closest('[data-f]');if(!c)return;filter=filter===c.dataset.f?null:c.dataset.f;render()});
+$('#q').addEventListener('input',e=>{q=e.target.value.trim();render()});
+$('#refresh').addEventListener('click',load);
+$('#list').addEventListener('click',e=>{const b=e.target.closest('[data-id]');if(b)openDetail(all.find(o=>o.id===b.dataset.id))});
+
+/* ---------- szczegóły + zmiana statusu ---------- */
+const dm=$('#d-modal');
+function openDetail(o){
+  cur=o;const p=o.profiles||{},s=ST[o.status];
+  const mail=p.email?`mailto:${encodeURIComponent(p.email)}?subject=${encodeURIComponent('Zamówienie – dane do wpłaty')}&body=${encodeURIComponent(`Cześć ${p.first_name||''},\n\nw sprawie zamówienia: ${o.book} (dział: ${o.section}).\n\nDane do wpłaty:\n`)}`:'';
+  $('#d-body').innerHTML=`<span class="badge ${s.cls}">${s.label}</span><h2>${esc(o.book)}</h2>
+   <h4>Użytkownik</h4><dl class="dl"><dt>Imię</dt><dd>${esc(p.first_name||'—')}</dd><dt>E-mail</dt><dd>${p.email?`<a href="${mail}">${esc(p.email)}</a>`:'—'}</dd><dt>ID konta</dt><dd>${esc(o.user_id)}</dd><dt>Konto od</dt><dd>${p.created_at?fmt(p.created_at):'—'}</dd></dl>
+   <h4>Zamówienie</h4><dl class="dl"><dt>Typ szkoły</dt><dd>${esc(o.school_type)}</dd><dt>Klasa</dt><dd>${esc(o.class_name)}</dd><dt>Książka</dt><dd>${esc(o.book)}</dd><dt>Dział</dt><dd>${esc(o.section)}</dd><dt>Tematy</dt><dd>${esc(o.topics||'— (cały dział)')}</dd><dt>Złożone</dt><dd>${new Date(o.created_at).toLocaleString('pl-PL')}</dd><dt>Pliki</dt><dd>${o.zip_path?'ZIP wgrany ✓':'brak'}</dd></dl>
+   <h4>Zmień status</h4><div class="seg">
+    <button class="opt ${o.status==='pending_payment'?'cur':''}" data-s="pending_payment" ${o.status==='pending_payment'?'disabled':''}>Oczekiwanie na płatność</button>
+    <button class="opt ${o.status==='completed'?'cur':''}" data-s="completed">${o.status==='completed'?'Zrealizowane – zmień pliki':'Zrealizowane…'}</button>
+    <button class="opt ${o.status==='cancelled'?'cur':''}" data-s="cancelled" ${o.status==='cancelled'?'disabled':''}>Anulowane</button>
+   </div>`;
+  dm.classList.add('show');
+}
+$('#d-body').addEventListener('click',async e=>{
+  const b=e.target.closest('[data-s]');if(!b||b.disabled)return;
+  if(b.dataset.s==='completed')return openZip();
+  b.disabled=true;
+  const {data,error}=await sb.from('orders').update({status:b.dataset.s,updated_at:new Date().toISOString()}).eq('id',cur.id).select();
+  if(error||!data?.length){b.disabled=false;return toast('Nie udało się zmienić statusu (czy masz rolę admin?)')}
+  cur.status=data[0].status;render();openDetail(cur);toast('Status: '+ST[cur.status].label);
+});
+const closeDm=()=>dm.classList.remove('show');
+$('#d-close').addEventListener('click',closeDm);
+dm.addEventListener('click',e=>{if(e.target===dm)closeDm()});
+
+/* ---------- realizacja: wybór plików ---------- */
+const zm=$('#z-modal');
+function openZip(){
+  zfiles=[];renderFiles();$('#prog').hidden=true;setBusy(false);
+  $('#z-sub').textContent=`${cur.book} – ${who(cur)}`;
+  closeDm();zm.classList.add('show');
+}
+function addFiles(list){
+  list.forEach(x=>{if(!zfiles.some(f=>f.path===x.path))zfiles.push(x)});renderFiles();
+}
+function renderFiles(){
+  $('#zfiles').innerHTML=zfiles.map((f,i)=>`<li><span class="n">${esc(f.path)}</span><span class="s">${size(f.file.size)} <button data-rm="${i}" aria-label="Usuń ${esc(f.path)}">×</button></span></li>`).join('');
+  const tot=zfiles.reduce((a,f)=>a+f.file.size,0);
+  $('#zsum').textContent=zfiles.length?`${zfiles.length} plik. · razem ${size(tot)}`:'';
+}
+$('#zfiles').addEventListener('click',e=>{const b=e.target.closest('[data-rm]');if(b&&!zbusy){zfiles.splice(+b.dataset.rm,1);renderFiles()}});
+$('#add-files').addEventListener('click',()=>$('#in-files').click());
+$('#add-dir').addEventListener('click',()=>$('#in-dir').click());
+$('#in-files').addEventListener('change',e=>{addFiles([...e.target.files].map(f=>({path:f.name,file:f})));e.target.value=''});
+$('#in-dir').addEventListener('change',e=>{addFiles([...e.target.files].map(f=>({path:f.webkitRelativePath||f.name,file:f})));e.target.value=''});
+async function walk(en,path=''){ // rekurencyjnie czyta przeciągnięte foldery
+  if(en.isFile)return [await new Promise(r=>en.file(f=>r({path:path+en.name,file:f}),()=>r(null)))].filter(Boolean);
+  const rd=en.createReader();let all=[],b;
+  do{b=await new Promise(r=>rd.readEntries(r,()=>r([])));all=all.concat(b)}while(b.length);
+  return (await Promise.all(all.map(x=>walk(x,path+en.name+'/')))).flat();
+}
+const zd=$('#zdrop');
+['dragenter','dragover'].forEach(ev=>zd.addEventListener(ev,e=>{e.preventDefault();zd.classList.add('over')}));
+['dragleave','drop'].forEach(ev=>zd.addEventListener(ev,e=>{e.preventDefault();zd.classList.remove('over')}));
+zd.addEventListener('drop',async e=>{
+  if(zbusy)return;
+  const ens=[...e.dataTransfer.items].map(i=>i.webkitGetAsEntry&&i.webkitGetAsEntry()).filter(Boolean);
+  addFiles((await Promise.all(ens.map(x=>walk(x)))).flat());
+});
+function setBusy(b){zbusy=b;['z-go','z-cancel','add-files','add-dir'].forEach(id=>$('#'+id).disabled=b)}
+function prog(p,t,indet){$('#prog').hidden=false;$('#pt').classList.toggle('indet',!!indet);$('#pi').style.width=p+'%';$('#ptxt').textContent=t}
+$('#z-cancel').addEventListener('click',()=>{zm.classList.remove('show');openDetail(cur)});
+$('#z-go').addEventListener('click',async()=>{
+  if(!zfiles.length)return toast('Dodaj przynajmniej jeden plik');
+  setBusy(true);const o=cur;
+  try{
+    const zip=new JSZip();zfiles.forEach(x=>zip.file(x.path,x.file,{binary:true}));
+    prog(0,'Pakowanie… 0%');
+    const blob=await zip.generateAsync({type:'blob',compression:'DEFLATE',compressionOptions:{level:6},streamFiles:true},m=>prog(m.percent,'Pakowanie… '+Math.round(m.percent)+'%'));
+    prog(100,`Wysyłanie ZIP-a (${size(blob.size)}) do Supabase…`,true);
+    const path=`${o.user_id}/${o.id}.zip`;
+    const {error:ue}=await sb.storage.from('deliveries').upload(path,blob,{upsert:true,contentType:'application/zip'});
+    if(ue)throw new Error(/exceeded|too large|413/i.test(ue.message)?'Plik jest za duży – przekracza limit Supabase Storage.':'Wysyłka nie powiodła się: '+ue.message);
+    const {data,error}=await sb.from('orders').update({status:'completed',zip_path:path,updated_at:new Date().toISOString()}).eq('id',o.id).select();
+    if(error||!data?.length)throw new Error('Plik wgrany, ale nie udało się zmienić statusu.');
+    Object.assign(o,data[0]);render();zm.classList.remove('show');toast('Zrealizowane! Użytkownik może pobrać ZIP.');
+  }catch(err){$('#prog').hidden=true;toast(err.message)}
+  setBusy(false);
+});
+addEventListener('keydown',e=>{if(e.key==='Escape'&&!zbusy){closeDm();zm.classList.remove('show')}});
+
+/* ---------- start: tylko dla roli admin ---------- */
+sb.auth.onAuthStateChange(ev=>{if(ev==='SIGNED_OUT'&&!leaving)EP.goLogin()});
+$('#logout').addEventListener('click',async()=>{leaving=true;await sb.auth.signOut();location.href=EP.LOGIN+'#logowanie'});
+(async()=>{
+  $('#to-portal').href=EP.HOME;
+  const {data:{session}}=await sb.auth.getSession();
+  if(!session)return EP.goLogin();
+  const {data:p}=await sb.from('profiles').select('role').eq('id',session.user.id).maybeSingle();
+  if(p?.role!=='admin')return location.replace(EP.HOME);   // zwykły użytkownik nie ma tu wstępu
+  $('#boot').classList.add('off');setTimeout(()=>$('#boot').remove(),500);
+  load();
+})();
+</script>
+</body>
+</html>
