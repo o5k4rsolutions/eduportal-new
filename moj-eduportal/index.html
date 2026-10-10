@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mój Eduportal</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="https://platforma-eduportal.pages.dev/themes/faviconeduportal.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1d1d1f;--mute:#6e6e73;--soft:#f5f5f7;--line:#e5e5ea;--accent:#4b3bff;--accent2:#ff5fa2;--ok:#1a7f37;--warn:#b25e00;--r:24px}
+*{box-sizing:border-box;margin:0}
+body{min-height:100vh;display:grid;grid-template-columns:260px minmax(0,1fr);font-family:Figtree,-apple-system,system-ui,sans-serif;color:var(--ink);background:var(--soft);-webkit-font-smoothing:antialiased;line-height:1.5}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+
+/* pasek boczny */
+aside{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:28px;padding:28px 18px;background:#000;color:#fff;overflow:hidden}
+aside::before{content:"";position:absolute;width:420px;height:420px;left:-200px;bottom:-230px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));opacity:.85;pointer-events:none}
+aside>*{position:relative}
+.brand{display:flex;align-items:center;gap:9px;padding-left:10px}
+.brand span{font-size:26px;font-weight:800;letter-spacing:-.03em;line-height:1;color:#fff;transition:transform .4s cubic-bezier(.3,1.6,.5,1)}
+.brand:hover span{transform:translateX(-3px) rotate(-4deg)}
+.brand img{height:30px}
+nav{display:flex;flex-direction:column;gap:4px}
+nav a{position:relative;overflow:hidden;isolation:isolate;display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;font-weight:600;font-size:15px;color:#ffffffb8;transition:color .3s}
+nav a::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,var(--accent),var(--accent2));transform:scaleX(0);transform-origin:left;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+nav a:hover,nav a.on{color:#fff}
+nav a:hover::before,nav a.on::before{transform:scaleX(1)}
+nav svg{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.foot{margin-top:auto;font-size:12px;color:#ffffffb3;display:flex;align-items:center;gap:8px;padding-left:10px}
+.foot img{height:14px;filter:brightness(0) invert(1)}
+
+/* treść */
+main{padding:44px clamp(20px,4vw,56px) 80px;max-width:1100px;width:100%}
+.view{display:none}
+.view.active{display:block}
+.view.active .anim{opacity:0;animation:rise .6s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(var(--i,0)*60ms + 40ms)}
+@keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+h1{font-size:clamp(30px,4.4vw,44px);letter-spacing:-.03em;line-height:1.08;font-weight:800}
+.lead{color:var(--mute);font-size:18px;margin:8px 0 32px;max-width:560px}
+h2{font-size:22px;letter-spacing:-.02em;margin-bottom:14px}
+
+.card{background:#fff;border-radius:var(--r);padding:28px;box-shadow:0 1px 0 #0000000a}
+.grid{display:grid;gap:18px}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g2{grid-template-columns:repeat(2,1fr)}
+.stat b{display:block;font-size:44px;letter-spacing:-.03em;line-height:1}
+.stat span{color:var(--mute);font-weight:500}
+.quick{display:flex;flex-direction:column;gap:10px;align-items:flex-start;transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s;cursor:pointer;text-align:left;border:0;width:100%}
+.quick:hover{transform:translateY(-4px);box-shadow:0 22px 40px -24px #4b3bff66}
+.quick h3{font-size:20px;letter-spacing:-.02em}
+.quick p{color:var(--mute);font-size:15px}
+.dark{background:#000;color:#fff}
+.dark p{color:#a1a1a6}
+
+/* przyciski */
+.btn{position:relative;overflow:hidden;isolation:isolate;display:inline-flex;align-items:center;justify-content:center;padding:13px 26px;border-radius:999px;font:600 15px Figtree,sans-serif;border:2px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer;transition:color .35s,border-color .35s,transform .2s}
+.btn::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,var(--accent),var(--accent2));transform:scaleX(0);transform-origin:left;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+.btn:hover,.btn:focus-visible{color:#fff;border-color:transparent}
+.btn:hover::before,.btn:focus-visible::before{transform:scaleX(1)}
+.btn:active{transform:scale(.97)}
+.btn.solid{background:var(--ink);color:#fff}
+.btn.sm{padding:8px 18px;font-size:14px}
+.btn[disabled]{opacity:.55;cursor:progress}
+
+/* lista zamówień */
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.chip{border:1.5px solid #d2d2d7;background:#fff;border-radius:999px;padding:8px 16px;font-weight:600;font-size:14px;color:var(--mute);cursor:pointer;transition:all .25s}
+.chip:hover{border-color:var(--ink);color:var(--ink)}
+.chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.order{display:grid;grid-template-columns:1fr auto auto;gap:18px;align-items:center;padding:20px 0;border-top:1px solid var(--line);animation:rise .45s both}
+.order:first-child{border-top:0}
+.order h3{font-size:17px}
+.order small{color:var(--mute)}
+.badge{font-size:13px;font-weight:700;padding:5px 12px;border-radius:999px}
+.b-ok{background:#1a7f3718;color:var(--ok)}
+.b-wait{background:#b25e0018;color:var(--warn)}
+.empty{padding:36px 0;text-align:center;color:var(--mute)}
+
+/* formularze */
+label{display:block;font-weight:600;font-size:14px;margin-bottom:6px;transition:color .25s}
+.field{margin-bottom:18px}
+.field:focus-within label{color:var(--accent)}
+input[type=text],select,textarea{width:100%;padding:13px 16px;border-radius:14px;border:1.5px solid #d2d2d7;font:500 16px Figtree,sans-serif;color:var(--ink);background:#fff;transition:border-color .25s,box-shadow .25s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 4px #4b3bff22}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+.note{white-space:pre-wrap;font-size:16px;line-height:1.75;min-height:120px}
+.note h3{font-size:22px;margin-bottom:8px}
+.cursor::after{content:"";display:inline-block;width:2px;height:1em;background:var(--accent);margin-left:2px;vertical-align:-2px;animation:blink .8s infinite}
+@keyframes blink{50%{opacity:0}}
+.result{display:none;margin-top:18px}
+.result.show{display:block;animation:rise .5s both}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+
+/* strefa wgrywania */
+.drop{position:relative;border:2px dashed #c7c7cc;border-radius:var(--r);padding:48px 24px;text-align:center;background:#fff;cursor:pointer;transition:border-color .3s,background .3s,transform .3s}
+.drop:hover,.drop.over{border-color:var(--accent);background:#4b3bff0a;transform:scale(1.01)}
+.drop b{font-size:20px;display:block;margin:6px 0 2px}
+.drop span{color:var(--mute)}
+.drop input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.drop svg{width:44px;height:44px;stroke:var(--accent);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;transition:transform .4s cubic-bezier(.3,1.6,.5,1)}
+.drop:hover svg,.drop.over svg{transform:translateY(-6px) scale(1.1)}
+.preview{max-width:100%;max-height:340px;border-radius:16px;margin:0 auto}
+.scan{position:relative;overflow:hidden;border-radius:16px;display:none;background:var(--soft);text-align:center}
+.scan.show{display:block}
+.scan.busy::after{content:"";position:absolute;left:0;right:0;height:60px;top:-60px;background:linear-gradient(to bottom,transparent,#4b3bff55,transparent);animation:scan 1.4s linear infinite}
+@keyframes scan{to{top:100%}}
+
+/* moje notatki */
+.saved{padding:18px 0;border-top:1px solid var(--line);animation:rise .45s both}
+.saved:first-child{border-top:0}
+.saved h3{font-size:17px}
+.saved p{color:var(--mute);font-size:15px;white-space:pre-wrap}
+
+.top{display:flex;justify-content:flex-end;align-items:center;gap:14px;margin-bottom:28px}
+.me{display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px}
+.av{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));transition:transform .4s cubic-bezier(.3,1.6,.5,1)}
+.me:hover .av{transform:rotate(-8deg) scale(1.1)}
+.modal{position:fixed;inset:0;z-index:30;display:grid;place-items:center;padding:20px;background:#000000a6;backdrop-filter:blur(6px);opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
+.modal.show{opacity:1;visibility:visible}
+.modal .box{width:100%;max-width:400px;background:#fff;border-radius:var(--r);padding:32px;text-align:center;transform:translateY(24px) scale(.94);transition:transform .45s cubic-bezier(.3,1.4,.5,1)}
+.modal.show .box{transform:none}
+.modal h2{margin-bottom:6px}
+.modal p{color:var(--mute);margin-bottom:24px}
+.modal .actions{justify-content:center;margin:0}
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,40px);opacity:0;background:var(--ink);color:#fff;padding:12px 22px;border-radius:999px;font-weight:600;font-size:15px;transition:all .45s cubic-bezier(.3,1.4,.5,1);z-index:20;pointer-events:none}
+.toast.show{transform:translate(-50%,0);opacity:1}
+
+@media(max-width:860px){
+ body{grid-template-columns:1fr;padding-bottom:76px}
+ aside{position:fixed;inset:auto 0 0 0;height:auto;flex-direction:row;padding:8px;gap:0;z-index:10;border-radius:20px 20px 0 0}
+ aside::before,.brand,.foot{display:none}
+ nav{flex-direction:row;width:100%;justify-content:space-between}
+ nav a{flex-direction:column;gap:2px;padding:8px 6px;font-size:11px;flex:1;text-align:center;align-items:center}
+ .g3,.g2,.two{grid-template-columns:1fr}
+ .order{grid-template-columns:1fr auto}
+ .order .btn{grid-column:1/-1}
+}
+@media(prefers-reduced-motion:reduce){.view.active .anim{opacity:1}*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<aside>
+ <a class="brand" href="/" aria-label="Mój Eduportal"><span>Mój</span><img src="https://platforma-eduportal.pages.dev/themes/eduportal_biale.svg" alt="Eduportal"></a>
+ <nav aria-label="Mój Eduportal">
+  <a href="#przeglad"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg>Przegląd</a>
+  <a href="#zamowienia"><svg viewBox="0 0 24 24"><path d="M6 7h12l-1 13H7L6 7zM9 7a3 3 0 016 0"/></svg>Zamówienia</a>
+  <a href="#generator"><svg viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3zM19 17l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7.7-2z"/></svg>Generator notatek</a>
+  <a href="#rozczytywanie"><svg viewBox="0 0 24 24"><path d="M4 8V5a1 1 0 011-1h3M16 4h3a1 1 0 011 1v3M20 16v3a1 1 0 01-1 1h-3M8 20H5a1 1 0 01-1-1v-3M8 12h8M8 9h8M8 15h5"/></svg>Rozczytaj notatki</a>
+  <a href="#notatki"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6V3zM14 3v5h5M9 13h7M9 17h5"/></svg>Moje notatki</a>
+ </nav>
+ <div class="foot">Własność marki <img src="https://platforma-eduportal.pages.dev/themes/logo_rakso_szerokie.svg" alt="Rakso"></div>
+</aside>
+
+<main>
+
+ <div class="top">
+  <div class="me"><span class="av" id="avatar">I</span><span id="me-name">Imię</span></div>
+  <button class="btn sm" id="logout-open">Wyloguj się</button>
+ </div>
+
+ <!-- PRZEGLĄD -->
+ <section class="view" id="przeglad">
+  <h1>Witaj, <span class="user-name">Imię</span>!</h1>
+  <p class="lead">Tu masz swoje zamówienia, notatki i narzędzia do nauki.</p>
+  <div class="grid g3" style="margin-bottom:18px">
+   <div class="card stat"><b data-count="4">0</b><span>zamówione testy</span></div>
+   <div class="card stat"><b data-count="12">0</b><span>zapisanych notatek</span></div>
+   <div class="card stat"><b data-count="7">0</b><span>rozczytanych zdjęć</span></div>
+  </div>
+  <h2 style="margin-top:34px">Szybkie akcje</h2>
+  <div class="grid g3">
+   <button class="card quick" data-go="generator"><h3>Wygeneruj notatkę</h3><p>Podaj temat, resztą zajmiemy się my.</p></button>
+   <button class="card quick" data-go="rozczytywanie"><h3>Rozczytaj zdjęcie</h3><p>Zamień nieczytelne pismo w tekst.</p></button>
+   <button class="card quick dark" data-go="zamowienia"><h3>Kup nowy test</h3><p>Sprawdź, co pojawia się u nauczycieli.</p></button>
+  </div>
+ </section>
+
+ <!-- ZAMÓWIENIA -->
+ <section class="view" id="zamowienia">
+  <h1>Zamówienia</h1>
+  <p class="lead">Wszystkie testy, które kupiłeś, w jednym miejscu.</p>
+  <div class="tools" id="filters">
+   <button class="chip on" data-f="all">Wszystkie</button>
+   <button class="chip" data-f="ok">Dostępne</button>
+   <button class="chip" data-f="wait">Oczekujące</button>
+  </div>
+  <div class="card" id="orders"></div>
+ </section>
+
+ <!-- GENERATOR -->
+ <section class="view" id="generator">
+  <h1>Generator notatek</h1>
+  <p class="lead">Wpisz temat i wybierz, jak szczegółowa ma być notatka.</p>
+  <form class="card" id="gen-form">
+   <div class="field"><label for="g-topic">Temat</label><input id="g-topic" type="text" placeholder="np. Fotosynteza" required></div>
+   <div class="two">
+    <div class="field"><label for="g-sub">Przedmiot</label><select id="g-sub"><option>Biologia</option><option>Chemia</option><option>Fizyka</option><option>Historia</option><option>Matematyka</option><option>Język polski</option></select></div>
+    <div class="field"><label for="g-len">Długość</label><select id="g-len"><option>Krótka</option><option selected>Średnia</option><option>Szczegółowa</option></select></div>
+   </div>
+   <button class="btn solid" type="submit" id="gen-btn">Generuj notatkę</button>
+  </form>
+  <div class="card result" id="gen-res">
+   <div class="note" id="gen-note"></div>
+   <div class="actions">
+    <button class="btn sm" id="gen-copy">Kopiuj</button>
+    <button class="btn sm solid" id="gen-save">Zapisz w Moich notatkach</button>
+   </div>
+  </div>
+ </section>
+
+ <!-- ROZCZYTYWANIE -->
+ <section class="view" id="rozczytywanie">
+  <h1>Rozczytaj notatki</h1>
+  <p class="lead">Wgraj zdjęcie zeszytu, a zamienimy pismo na tekst, który da się przeczytać.</p>
+  <label class="drop" id="drop">
+   <svg viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 001 1h14a1 1 0 001-1v-3"/></svg>
+   <b>Przeciągnij zdjęcie tutaj</b><span>albo kliknij, aby wybrać plik (JPG, PNG)</span>
+   <input type="file" id="ocr-file" accept="image/*">
+  </label>
+  <div class="card result" id="ocr-res">
+   <div class="scan" id="scan"><img class="preview" id="ocr-img" alt="Podgląd wgranego zdjęcia"></div>
+   <div class="note" id="ocr-note" style="margin-top:18px"></div>
+   <div class="actions">
+    <button class="btn solid" id="ocr-run">Rozczytaj</button>
+    <button class="btn" id="ocr-save" style="display:none">Zapisz w Moich notatkach</button>
+   </div>
+  </div>
+ </section>
+
+ <!-- MOJE NOTATKI -->
+ <section class="view" id="notatki">
+  <h1>Moje notatki</h1>
+  <p class="lead">Notatki wygenerowane i rozczytane przez Ciebie.</p>
+  <div class="card" id="saved"></div>
+ </section>
+
+</main>
+<div class="modal" id="logout-modal" role="dialog" aria-modal="true" aria-labelledby="lo-title">
+ <div class="box">
+  <h2 id="lo-title">Wylogować się?</h2>
+  <p>Twoje zapisane notatki i zamówienia będą na Ciebie czekać po ponownym zalogowaniu.</p>
+  <div class="actions">
+   <button class="btn" id="logout-cancel">Zostań</button>
+   <button class="btn solid" id="logout-yes">Wyloguj się</button>
+  </div>
+ </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* TEMPLATE – dane są przykładowe, a generowanie i rozczytywanie jest symulowane.
+   Podłącz własne API w miejscach oznaczonych TODO. */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+/* ---------- użytkownik i wylogowanie ---------- */
+const user = { name: 'Imię' }; // TODO: wstaw imię zalogowanego użytkownika (np. z sesji / backendu)
+$$('.user-name, #me-name').forEach(el => el.textContent = user.name);
+$('#avatar').textContent = user.name.trim().charAt(0).toUpperCase();
+
+const modal = $('#logout-modal');
+const openLogout = () => { modal.classList.add('show'); setTimeout(() => $('#logout-yes').focus(), 50); };
+const closeLogout = () => { modal.classList.remove('show'); $('#logout-open').focus(); };
+$('#logout-open').addEventListener('click', openLogout);
+$('#logout-cancel').addEventListener('click', closeLogout);
+modal.addEventListener('click', e => { if (e.target === modal) closeLogout(); });
+addEventListener('keydown', e => { if (e.key === 'Escape' && modal.classList.contains('show')) closeLogout(); });
+$('#logout-yes').addEventListener('click', async () => {
+  // TODO: zakończ sesję (np. wyczyść token / wywołaj API wylogowania)
+  modal.classList.remove('show');
+  toast('Wylogowano. Do zobaczenia!');
+  await sleep(900);
+  location.href = 'auth-template.html#logowanie'; // TODO: podmień na adres strony logowania
+});
+
+/* ---------- widoki ---------- */
+const views = $$('.view'), links = $$('nav a');
+function show() {
+  const id = location.hash.slice(1);
+  const v = views.find(x => x.id === id) || views[0];
+  views.forEach(x => x.classList.remove('active'));
+  [...v.children].forEach((el, i) => { el.classList.add('anim'); el.style.setProperty('--i', i); });
+  void v.offsetWidth;
+  v.classList.add('active');
+  links.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + v.id));
+  document.title = (links.find(a => a.classList.contains('on'))?.textContent || 'Mój Eduportal') + ' – Mój Eduportal';
+  if (v.id === 'przeglad') countUp();
+  scrollTo({ top: 0 });
+}
+addEventListener('hashchange', show);
+$$('[data-go]').forEach(b => b.addEventListener('click', () => location.hash = b.dataset.go));
+
+function countUp() {
+  $$('[data-count]').forEach(el => {
+    const to = +el.dataset.count, t0 = performance.now();
+    (function tick(t) {
+      const p = Math.min((t - t0) / 800, 1);
+      el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) requestAnimationFrame(tick);
+    })(t0);
+  });
+}
+
+function toast(text) {
+  const t = $('#toast'); t.textContent = text; t.classList.add('show');
+  clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+/* ---------- zamówienia (przykładowe dane) ---------- */
+const orders = [
+  { name: 'Test z fotosyntezy – klasa 7', info: 'Biologia · 12.10.2026 · 19 zł', st: 'ok' },
+  { name: 'Sprawdzian z równań – klasa 8', info: 'Matematyka · 09.10.2026 · 24 zł', st: 'ok' },
+  { name: 'Kartkówka z Pana Tadeusza', info: 'Język polski · 08.10.2026 · 9 zł', st: 'wait' },
+  { name: 'Baza zadań z kinematyki', info: 'Fizyka · 02.10.2026 · 29 zł', st: 'ok' }
+]; // TODO: pobierz zamówienia z backendu
+function renderOrders(f = 'all') {
+  const list = orders.filter(o => f === 'all' || o.st === f);
+  $('#orders').innerHTML = list.length ? list.map((o, i) => `
+    <div class="order" style="animation-delay:${i * 70}ms">
+      <div><h3>${o.name}</h3><small>${o.info}</small></div>
+      <span class="badge ${o.st === 'ok' ? 'b-ok' : 'b-wait'}">${o.st === 'ok' ? 'Dostępne' : 'Oczekuje na płatność'}</span>
+      <button class="btn sm ${o.st === 'ok' ? 'solid' : ''}" data-order="${o.name}">${o.st === 'ok' ? 'Otwórz test' : 'Dokończ płatność'}</button>
+    </div>`).join('') : '<div class="empty">Brak zamówień w tej kategorii.</div>';
+}
+$('#filters').addEventListener('click', e => {
+  const c = e.target.closest('.chip'); if (!c) return;
+  $$('.chip').forEach(x => x.classList.toggle('on', x === c));
+  renderOrders(c.dataset.f);
+});
+$('#orders').addEventListener('click', e => {
+  const b = e.target.closest('[data-order]'); if (b) toast('TODO: ' + b.textContent.trim().toLowerCase());
+});
+renderOrders();
+
+/* ---------- moje notatki ---------- */
+const saved = [{ title: 'Układ krążenia', text: 'Serce pompuje krew przez tętnice i żyły…' }];
+function renderSaved() {
+  $('#saved').innerHTML = saved.length ? saved.map((n, i) => `
+    <div class="saved" style="animation-delay:${i * 60}ms"><h3>${n.title}</h3><p>${n.text.slice(0, 160)}${n.text.length > 160 ? '…' : ''}</p></div>`).join('')
+    : '<div class="empty">Nie masz jeszcze zapisanych notatek.</div>';
+}
+function save(title, text) { saved.unshift({ title, text }); renderSaved(); toast('Zapisano w Moich notatkach'); } // TODO: zapis na koncie
+renderSaved();
+
+/* ---------- maszyna do pisania ---------- */
+async function type(el, text) {
+  el.classList.add('cursor'); el.textContent = '';
+  for (const ch of text) { el.textContent += ch; await sleep(ch === '\n' ? 90 : 12); }
+  el.classList.remove('cursor');
+}
+
+/* ---------- generator ---------- */
+$('#gen-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const topic = $('#g-topic').value.trim(), btn = $('#gen-btn');
+  btn.disabled = true; btn.textContent = 'Generuję…';
+  $('#gen-res').classList.add('show');
+  $('#gen-note').textContent = '';
+  await sleep(600);
+  // TODO: wywołaj API generujące notatkę (temat, przedmiot, długość)
+  const text = `${topic}\n\n• Najważniejsze pojęcia: …\n• Jak to działa: …\n• Przykład: …\n• Na co uważać na sprawdzianie: …\n\n(Przykładowa treść – tu pojawi się notatka wygenerowana na Twój temat, z przedmiotu ${$('#g-sub').value.toLowerCase()}.)`;
+  await type($('#gen-note'), text);
+  $('#gen-note').dataset.title = topic;
+  btn.disabled = false; btn.textContent = 'Generuj ponownie';
+});
+$('#gen-copy').addEventListener('click', () => { navigator.clipboard?.writeText($('#gen-note').textContent); toast('Skopiowano'); });
+$('#gen-save').addEventListener('click', () => save($('#gen-note').dataset.title || 'Notatka', $('#gen-note').textContent));
+
+/* ---------- rozczytywanie ---------- */
+const drop = $('#drop'), file = $('#ocr-file');
+['dragenter', 'dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('over'); }));
+['dragleave', 'drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('over'); }));
+drop.addEventListener('drop', e => { if (e.dataTransfer.files[0]) load(e.dataTransfer.files[0]); });
+file.addEventListener('change', () => file.files[0] && load(file.files[0]));
+function load(f) {
+  if (!f.type.startsWith('image/')) return toast('Wybierz plik graficzny (JPG lub PNG)');
+  $('#ocr-img').src = URL.createObjectURL(f);
+  $('#scan').classList.add('show');
+  $('#ocr-note').textContent = '';
+  $('#ocr-save').style.display = 'none';
+  $('#ocr-res').classList.add('show');
+}
+$('#ocr-run').addEventListener('click', async () => {
+  const btn = $('#ocr-run'), scan = $('#scan');
+  btn.disabled = true; btn.textContent = 'Rozczytuję…'; scan.classList.add('busy');
+  await sleep(2200);
+  // TODO: wyślij zdjęcie do OCR i wstaw zwrócony tekst
+  scan.classList.remove('busy');
+  await type($('#ocr-note'), 'Tu pojawi się rozczytany tekst z Twojego zdjęcia – czytelny i gotowy do edycji.\n\n(Przykładowa treść w tym szablonie.)');
+  $('#ocr-save').style.display = '';
+  btn.disabled = false; btn.textContent = 'Rozczytaj ponownie';
+});
+$('#ocr-save').addEventListener('click', () => save('Rozczytana notatka', $('#ocr-note').textContent));
+
+show();
+</script>
+</body>
+</html>
