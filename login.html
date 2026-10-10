@@ -9,7 +9,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@500;600;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--ink:#1d1d1f;--mute:#6e6e73;--soft:#f5f5f7;--accent:#4b3bff;--accent2:#ff5fa2;--err:#d70015;--ok:#1a7f37}
 *{box-sizing:border-box;margin:0}
@@ -51,8 +50,8 @@ input[aria-invalid=true]{border-color:var(--err)}
 
 .btn{position:relative;overflow:hidden;isolation:isolate;display:flex;width:100%;align-items:center;justify-content:center;padding:15px 28px;border-radius:999px;font:600 16px Figtree,sans-serif;border:2px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;transition:border-color .35s}
 .btn::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,var(--accent),var(--accent2));transform:scaleX(0);transform-origin:left;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
-.btn:hover,:focus-visible{border-color:transparent}
-.btn:hover::before,:focus-visible::before{transform:scaleX(1)}
+.btn:hover,.btn:focus-visible{border-color:transparent}
+.btn:hover::before,.btn:focus-visible::before{transform:scaleX(1)}
 .btn[disabled]{opacity:.6;cursor:progress}
 
 .alt{text-align:center;margin-top:26px;color:var(--mute);font-size:15px}
@@ -70,6 +69,7 @@ input[aria-invalid=true]{border-color:var(--err)}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 .side small img{filter:brightness(0) invert(1)}
+body[data-v="nowe-haslo"] .side::before{transform:translate(-80px,-140px) scale(1.05);opacity:.8}
 
 .view{display:none}
 .view.active{display:block}
@@ -114,7 +114,7 @@ input{transition:border-color .25s,box-shadow .25s,transform .25s}
  <section class="view" id="logowanie" data-title="Logowanie" data-side="Wróć do nauki tam, gdzie skończyłeś.">
   <h1>Zaloguj się</h1>
   <p class="sub">Twoje testy i notatki czekają na koncie.</p>
-  <div class="msg bad" id="login-msg" role="status"></div>
+  <div class="msg" id="l-msg" role="alert"></div>
   <form id="login-form">
    <div class="field">
     <label for="l-email">Adres e-mail</label>
@@ -125,7 +125,7 @@ input{transition:border-color .25s,box-shadow .25s,transform .25s}
     <div class="inp"><input id="l-pass" type="password" class="has-eye" autocomplete="current-password" required><button type="button" class="eye" data-for="l-pass">Pokaż</button></div>
    </div>
    <div class="row"><span></span><a class="link" href="#reset-hasla">Nie pamiętasz hasła?</a></div>
-   <button class="btn" type="submit" id="login-btn">Zaloguj się</button>
+   <button class="btn" type="submit">Zaloguj się</button>
   </form>
   <p class="alt">Nie masz konta? <a class="link" href="#rejestracja">Załóż konto</a></p>
  </section>
@@ -133,11 +133,11 @@ input{transition:border-color .25s,box-shadow .25s,transform .25s}
  <section class="view" id="rejestracja" data-title="Rejestracja" data-side="Załóż konto i ucz się mądrzej.">
   <h1>Załóż konto</h1>
   <p class="sub">Zajmie Ci to minutę.</p>
-  <div class="msg bad" id="reg-msg" role="status"></div>
-  <form id="register-form">
+  <div class="msg" id="r-msg" role="alert"></div>
+  <form id="reg-form">
    <div class="field">
-    <label for="r-name">Imię i nazwisko</label>
-    <input id="r-name" type="text" autocomplete="name" required>
+    <label for="r-name">Imię</label>
+    <input id="r-name" type="text" autocomplete="given-name" required>
    </div>
    <div class="field">
     <label for="r-email">Adres e-mail</label>
@@ -153,7 +153,7 @@ input{transition:border-color .25s,box-shadow .25s,transform .25s}
     <div class="inp"><input id="r-pass2" type="password" class="has-eye" autocomplete="new-password" required><button type="button" class="eye" data-for="r-pass2">Pokaż</button></div>
    </div>
    <label class="check"><input type="checkbox" required><span>Akceptuję <a class="link" href="https://platforma-eduportal.pages.dev/regulamin-i-polityka-prywatnosci/">regulamin i politykę prywatności</a>.</span></label>
-   <button class="btn" type="submit" id="reg-btn" style="margin-top:16px">Załóż konto</button>
+   <button class="btn" type="submit" style="margin-top:16px">Załóż konto</button>
   </form>
   <p class="alt">Masz już konto? <a class="link" href="#logowanie">Zaloguj się</a></p>
  </section>
@@ -161,148 +161,147 @@ input{transition:border-color .25s,box-shadow .25s,transform .25s}
  <section class="view" id="reset-hasla" data-title="Resetowanie hasła" data-side="Każdemu zdarza się zapomnieć hasło.">
   <h1>Zresetuj hasło</h1>
   <p class="sub">Podaj e-mail, a wyślemy Ci link do ustawienia nowego hasła.</p>
-  <div class="msg good" id="reset-msg" role="status">Jeśli konto z tym adresem istnieje, wysłaliśmy na niego link do zmiany hasła.</div>
+  <div class="msg" id="reset-msg" role="alert"></div>
   <form id="reset-form">
    <div class="field">
     <label for="p-email">Adres e-mail</label>
     <input id="p-email" type="email" autocomplete="email" required>
    </div>
-   <button class="btn" type="submit" id="reset-btn">Wyślij link</button>
+   <button class="btn" type="submit">Wyślij link</button>
   </form>
   <p class="alt"><a class="link" href="#logowanie">Wróć do logowania</a></p>
  </section>
 
+ <section class="view" id="nowe-haslo" data-title="Nowe hasło" data-side="Ustaw nowe hasło i wracaj do nauki.">
+  <h1>Ustaw nowe hasło</h1>
+  <p class="sub">Wpisz hasło, którego będziesz używać do logowania.</p>
+  <div class="msg" id="n-msg" role="alert"></div>
+  <form id="new-form">
+   <div class="field">
+    <label for="n-pass">Nowe hasło</label>
+    <div class="inp"><input id="n-pass" type="password" class="has-eye" autocomplete="new-password" minlength="8" required><button type="button" class="eye" data-for="n-pass">Pokaż</button></div>
+    <div class="hint">Min. 8 znaków.</div>
+   </div>
+   <div class="field">
+    <label for="n-pass2">Powtórz nowe hasło</label>
+    <div class="inp"><input id="n-pass2" type="password" class="has-eye" autocomplete="new-password" required><button type="button" class="eye" data-for="n-pass2">Pokaż</button></div>
+   </div>
+   <button class="btn" type="submit">Zapisz hasło</button>
+  </form>
+ </section>
+
 </div></main>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="/supabase-config.js"></script>
 <script>
-const SUPABASE_URL = 'https://gvnrtbetcukwcntvikfc.supabase.co'; 
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd2bnJ0YmV0Y3Vrd2NudHZpa2ZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE2NTI1NjcsImV4cCI6MjEwNzIyODU2N30.EyVlI8YrMPo5Nq_PcUmtiqwuOfPoADW5qBv200_fwBA'; 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-async function checkSession() {
-  const { data: { session } } = await supabase.auth.getSession();
-  if (session) {
-    location.href = 'moj-eduportal.html';
-  }
-}
-checkSession();
-
-const views = [...document.querySelectorAll('.view')];
-const order = views.map(v => v.id);
-let current = null;
-
+const {EP,sb}=window;
+const $=s=>document.querySelector(s);
+const views=[...document.querySelectorAll('.view')];
+const order=views.map(v=>v.id);
+let current=null;
 function show(){
-  const id = location.hash.slice(1);
-  const v = views.find(x => x.id === id) || views[0];
-  const dir = current === null ? '' : (order.indexOf(v.id) > order.indexOf(current) ? 'from-right' : 'from-left');
-  views.forEach(x => { x.classList.remove('active','from-right','from-left'); });
-  const items = [...v.children].flatMap(el => el.tagName === 'FORM' || el.classList.contains('msg') ? [...el.children] : [el]);
-  items.forEach((el, i) => { el.classList.add('anim'); el.style.setProperty('--i', i); });
+  const id=location.hash.slice(1);
+  const v=views.find(x=>x.id===id)||views[0];
+  const dir=current===null?'':(order.indexOf(v.id)>order.indexOf(current)?'from-right':'from-left');
+  views.forEach(x=>x.classList.remove('active','from-right','from-left'));
+  const items=[...v.children].flatMap(el=>el.tagName==='FORM'?[...el.children]:[el]);
+  items.forEach((el,i)=>{el.classList.add('anim');el.style.setProperty('--i',i)});
   void v.offsetWidth;
-  v.classList.add('active'); if (dir) v.classList.add(dir);
-  document.body.dataset.v = v.id;
-  document.title = v.dataset.title + ' – Eduportal';
-  const t = document.getElementById('side-text');
-  t.textContent = v.dataset.side;
-  t.classList.remove('swap'); void t.offsetWidth; t.classList.add('swap');
-  current = v.id;
+  v.classList.add('active');if(dir)v.classList.add(dir);
+  document.body.dataset.v=v.id;
+  document.title=v.dataset.title+' – Eduportal';
+  const t=$('#side-text');
+  t.textContent=v.dataset.side;
+  t.classList.remove('swap');void t.offsetWidth;t.classList.add('swap');
+  current=v.id;
 }
-addEventListener('hashchange', show); show();
+addEventListener('hashchange',show);show();
 
-document.querySelectorAll('.eye').forEach(b => b.addEventListener('click', () => {
-  const i = document.getElementById(b.dataset.for), s = i.type === 'password';
-  i.type = s ? 'text' : 'password';
-  b.textContent = s ? 'Ukryj' : 'Pokaż';
+document.querySelectorAll('.eye').forEach(b=>b.addEventListener('click',()=>{
+  const i=document.getElementById(b.dataset.for),s=i.type==='password';
+  i.type=s?'text':'password';b.textContent=s?'Ukryj':'Pokaż';
 }));
 
-document.getElementById('login-form').addEventListener('submit', async (e) => {
+const flash=(el,t,k='bad')=>{el.className='msg show '+k;el.textContent=t};
+const clear=el=>{el.className='msg'};
+const tr=m=>({
+  'Invalid login credentials':'Nieprawidłowy e-mail lub hasło.',
+  'Email not confirmed':'Potwierdź adres e-mail – wysłaliśmy do Ciebie link.',
+  'User already registered':'Konto z tym adresem już istnieje. Zaloguj się.',
+  'New password should be different from the old password.':'Nowe hasło musi się różnić od poprzedniego.',
+  'Auth session missing!':'Link wygasł lub jest nieprawidłowy. Poproś o nowy.'
+}[m]||(/rate limit|too many/i.test(m)?'Zbyt wiele prób. Spróbuj za chwilę.':/password/i.test(m)?'Hasło jest zbyt słabe (min. 8 znaków).':'Coś poszło nie tak. Spróbuj ponownie.'));
+async function busy(btn,txt,fn){const t=btn.textContent;btn.disabled=true;btn.textContent=txt;try{await fn()}finally{btn.disabled=false;btn.textContent=t}}
+function mismatch(a,b){
+  if(a.value===b.value)return false;
+  b.setCustomValidity('Hasła muszą być takie same.');b.reportValidity();b.setCustomValidity('');
+  b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake');return true;
+}
+
+(async()=>{
+  if(EP.recovery)return;
+  const {data:{session}}=await sb.auth.getSession();
+  if(session)location.replace(EP.next());
+})();
+
+sb.auth.onAuthStateChange(ev=>{
+  if(ev==='PASSWORD_RECOVERY'){history.replaceState(null,'',location.pathname+location.search+'#nowe-haslo');show()}
+});
+if(EP.linkErr){
+  history.replaceState(null,'',location.pathname+location.search+'#reset-hasla');show();
+  flash($('#reset-msg'),'Ten link wygasł lub został już użyty. Wpisz e-mail, aby dostać nowy.');
+}
+
+$('#login-form').addEventListener('submit',e=>{
   e.preventDefault();
-  const email = document.getElementById('l-email').value.trim();
-  const password = document.getElementById('l-pass').value;
-  const btn = document.getElementById('login-btn');
-  const msg = document.getElementById('login-msg');
-  msg.classList.remove('show');
-
-  btn.disabled = true;
-  btn.textContent = 'Logowanie...';
-
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
-
-  btn.disabled = false;
-  btn.textContent = 'Zaloguj się';
-
-  if (error) {
-    msg.textContent = 'Błąd logowania: ' + error.message;
-    msg.classList.add('show', 'bad');
-  } else {
-    location.href = 'moj-eduportal.html';
-  }
+  const m=$('#l-msg');clear(m);
+  busy(e.target.querySelector('.btn'),'Loguję…',async()=>{
+    const {error}=await sb.auth.signInWithPassword({email:$('#l-email').value.trim(),password:$('#l-pass').value});
+    if(error)return flash(m,tr(error.message));
+    location.replace(EP.next());
+  });
 });
 
-document.getElementById('register-form').addEventListener('submit', async (e) => {
+$('#reg-form').addEventListener('submit',e=>{
   e.preventDefault();
-  const fullName = document.getElementById('r-name').value.trim();
-  const email = document.getElementById('r-email').value.trim();
-  const pass1 = document.getElementById('r-pass');
-  const pass2 = document.getElementById('r-pass2');
-  const btn = document.getElementById('reg-btn');
-  const msg = document.getElementById('reg-msg');
-  msg.classList.remove('show');
-
-  if (pass1.value !== pass2.value) {
-    pass2.setCustomValidity('Hasła muszą być takie same.');
-    pass2.reportValidity();
-    pass2.setCustomValidity('');
-    pass2.classList.remove('shake');
-    void pass2.offsetWidth;
-    pass2.classList.add('shake');
-    return;
-  }
-
-  btn.disabled = true;
-  btn.textContent = 'Rejestracja...';
-
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password: pass1.value,
-    options: {
-      data: { full_name: fullName }
-    }
+  const m=$('#r-msg');clear(m);
+  if(mismatch($('#r-pass'),$('#r-pass2')))return;
+  busy(e.target.querySelector('.btn'),'Zakładam konto…',async()=>{
+    const {data,error}=await sb.auth.signUp({
+      email:$('#r-email').value.trim(),password:$('#r-pass').value,
+      options:{data:{name:$('#r-name').value.trim()},emailRedirectTo:location.origin+EP.LOGIN+location.search+'#logowanie'}
+    });
+    if(error)return flash(m,tr(error.message));
+    if(data.session)return location.replace(EP.next());               
+    if(data.user&&data.user.identities&&!data.user.identities.length)  
+      return flash(m,'Konto z tym adresem już istnieje. Zaloguj się.');
+    flash(m,'Konto założone! Sprawdź skrzynkę i kliknij link potwierdzający, a potem się zaloguj.','good');
+    e.target.reset();
   });
-
-  btn.disabled = false;
-  btn.textContent = 'Załóż konto';
-
-  if (error) {
-    msg.textContent = 'Błąd rejestracji: ' + error.message;
-    msg.classList.add('show', 'bad');
-  } else {
-    msg.textContent = 'Konto zostało utworzone! Sprawdź e-mail lub zaloguj się.';
-    msg.classList.remove('bad');
-    msg.classList.add('show', 'good');
-    if (data.session) {
-      setTimeout(() => { location.href = 'moj-eduportal.html'; }, 1000);
-    }
-  }
 });
 
-document.getElementById('reset-form').addEventListener('submit', async (e) => {
+$('#reset-form').addEventListener('submit',e=>{
   e.preventDefault();
-  const email = document.getElementById('p-email').value.trim();
-  const btn = document.getElementById('reset-btn');
-  const resetMsg = document.getElementById('reset-msg');
-
-  btn.disabled = true;
-  btn.textContent = 'Wysyłanie...';
-
-  await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: window.location.origin + '/moj-eduportal.html'
+  const m=$('#reset-msg');clear(m);
+  busy(e.target.querySelector('.btn'),'Wysyłam…',async()=>{
+    const {error}=await sb.auth.resetPasswordForEmail($('#p-email').value.trim(),{redirectTo:location.origin+EP.LOGIN+location.search});
+    if(error&&/rate limit|too many/i.test(error.message))return flash(m,tr(error.message));
+    flash(m,'Jeśli konto z tym adresem istnieje, wysłaliśmy na niego link do zmiany hasła.','good');
+    e.target.reset();
   });
+});
 
-  btn.disabled = false;
-  btn.textContent = 'Wyślij link';
-  resetMsg.classList.add('show');
-  document.getElementById('reset-form').reset();
+$('#new-form').addEventListener('submit',e=>{
+  e.preventDefault();
+  const m=$('#n-msg');clear(m);
+  if(mismatch($('#n-pass'),$('#n-pass2')))return;
+  busy(e.target.querySelector('.btn'),'Zapisuję…',async()=>{
+    const {error}=await sb.auth.updateUser({password:$('#n-pass').value});
+    if(error)return flash(m,tr(error.message));
+    flash(m,'Hasło zmienione! Przenoszę Cię do konta…','good');
+    setTimeout(()=>location.replace(EP.next()),1200);
+  });
 });
 </script>
 </body>
