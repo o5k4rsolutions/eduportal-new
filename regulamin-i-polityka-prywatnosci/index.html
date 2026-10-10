@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Regulamin i polityka prywatności – EDUPortal</title>
+<meta name="description" content="Regulamin korzystania z platformy Eduportal oraz polityka prywatności.">
+<link rel="icon" type="image/svg+xml" href="https://platforma-eduportal.pages.dev/themes/faviconeduportal.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1d1d1f;--mute:#6e6e73;--soft:#f5f5f7;--line:#e5e5ea;--accent:#4b3bff;--accent2:#ff5fa2}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{font-family:Figtree,-apple-system,system-ui,sans-serif;color:var(--ink);background:#fff;-webkit-font-smoothing:antialiased;line-height:1.65}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+mark{background:#fff3a3;color:inherit;border-radius:4px;padding:0 4px}
+
+.btn{position:relative;overflow:hidden;isolation:isolate;display:inline-flex;align-items:center;justify-content:center;padding:8px 18px;border-radius:999px;font:600 14px Figtree,sans-serif;border:2px solid var(--ink);background:transparent;color:var(--ink);text-decoration:none;cursor:pointer;transition:color .35s,border-color .35s,transform .2s}
+.btn::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,var(--accent),var(--accent2));transform:scaleX(0);transform-origin:left;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+.btn:hover,.btn:focus-visible{color:#fff;border-color:transparent}
+.btn:hover::before,.btn:focus-visible::before{transform:scaleX(1)}
+.btn:active{transform:scale(.97)}
+.btn.solid{background:var(--ink);color:#fff}
+
+header.nav{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.82);backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid #0000000f}
+.nav-in{max-width:1100px;margin:auto;height:60px;padding:0 24px;display:flex;align-items:center;justify-content:space-between}
+.nav-in img{height:28px;display:block}
+
+.hero{max-width:1100px;margin:auto;padding:72px 24px 28px}
+h1{font-size:clamp(36px,6vw,64px);line-height:1.04;letter-spacing:-.035em;font-weight:800;max-width:14em}
+.upd{color:var(--mute);margin-top:14px}
+
+.tabs{position:relative;display:inline-flex;margin-top:32px;padding:4px;border-radius:999px;background:var(--soft)}
+.tabs a{position:relative;z-index:1;padding:10px 24px;border-radius:999px;font-weight:600;text-decoration:none;color:var(--mute);transition:color .3s}
+.tabs a.on{color:#fff}
+.pill{position:absolute;top:4px;bottom:4px;left:4px;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:transform .5s cubic-bezier(.2,.8,.2,1),width .5s cubic-bezier(.2,.8,.2,1)}
+
+.layout{max-width:1100px;margin:auto;padding:24px 24px 100px;display:grid;grid-template-columns:250px minmax(0,1fr);gap:56px}
+.toc{position:sticky;top:90px;align-self:start;display:flex;flex-direction:column;gap:2px;max-height:calc(100vh - 120px);overflow:auto}
+.toc a{position:relative;padding:7px 14px;border-radius:10px;font-size:14px;font-weight:500;color:var(--mute);text-decoration:none;transition:color .25s,background .25s,padding .3s}
+.toc a:hover{color:var(--ink);background:var(--soft)}
+.toc a.on{color:var(--accent);background:#4b3bff12;padding-left:20px;font-weight:700}
+
+.view{display:none}
+.view.active{display:block}
+.view.active>*{animation:rise .6s cubic-bezier(.2,.8,.2,1) both}
+.view.active>*:nth-child(2){animation-delay:.05s}.view.active>*:nth-child(3){animation-delay:.1s}.view.active>*:nth-child(4){animation-delay:.15s}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
+.doc h2{font-size:26px;letter-spacing:-.025em;line-height:1.2;font-weight:800;margin:56px 0 14px;padding-top:8px}
+.doc h2:first-child{margin-top:0}
+.doc ol,.doc ul{margin:0 0 0 1.3em;padding:0}
+.doc li{margin:0 0 10px;padding-left:6px}
+.doc li::marker{color:var(--accent);font-weight:700}
+.doc p{margin-bottom:12px}
+.doc ul ul,.doc ol ol{margin-top:8px}
+.note{background:var(--soft);border-radius:20px;padding:20px 24px;margin:0 0 36px;font-size:15px;color:#424245}
+
+footer{border-top:1px solid var(--line);padding:36px 24px;color:var(--mute);font-size:14px}
+.foot{max-width:1100px;margin:auto;display:flex;flex-wrap:wrap;gap:16px 40px;align-items:center;justify-content:space-between}
+.foot .brand{display:flex;align-items:center;gap:12px}
+.foot img{height:20px}
+
+@media(max-width:900px){
+ .layout{grid-template-columns:1fr;gap:0}
+ .toc{display:none}
+ .hero{padding-top:48px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="nav"><div class="nav-in">
+ <a href="/" aria-label="Eduportal – strona główna"><img src="https://platforma-eduportal.pages.dev/themes/eduportal_logoczarne.svg" alt="Eduportal"></a>
+ <a class="btn solid" href="/">Wróć do platformy</a>
+</div></header>
+
+<div class="hero">
+ <h1>Regulamin i polityka prywatności</h1>
+ <p class="upd">Ostatnia aktualizacja: <mark>10.10.2026</mark></p>
+ <nav class="tabs" id="tabs" aria-label="Dokumenty">
+  <span class="pill" id="pill"></span>
+  <a href="#regulamin">Regulamin</a>
+  <a href="#prywatnosc">Polityka prywatności</a>
+ </nav>
+</div>
+
+<div class="layout">
+ <nav class="toc" id="toc" aria-label="Spis treści"></nav>
+
+ <div class="doc">
+
+ <!-- ===================== REGULAMIN ===================== -->
+ <section class="view" id="regulamin">
+  <p class="note">Przeczytaj, zanim zaczniesz korzystać z Eduportal. Zasady są napisane tak, żeby dało się je zrozumieć bez prawnika.</p>
+
+  <h2>§ 1. Postanowienia ogólne</h2>
+  <ol>
+   <li>Regulamin określa zasady korzystania z platformy internetowej Eduportal, dostępnej pod adresem <mark>platforma-eduportal.pages.dev</mark> („Platforma”).</li>
+   <li>Usługodawcą i właścicielem marki jest <mark>RAKSO Web Dewelopment z siedzibą w Warszawie</mark> („Usługodawca”), działający pod marką Rakso. Kontakt: <mark>[adres e-mail]</mark>.</li>
+   <li>Użyte w Regulaminie określenia oznaczają:
+    <ul>
+     <li><strong>Użytkownik</strong> – osoba korzystająca z Platformy;</li>
+     <li><strong>Konto</strong> – indywidualny profil Użytkownika na Platformie;</li>
+     <li><strong>Test</strong> – cyfrowy materiał do nauki (test, kartkówka, baza zadań) oferowany w Platformie;</li>
+     <li><strong>Generator notatek</strong> – narzędzie tworzące notatki na temat podany przez Użytkownika;</li>
+     <li><strong>Rozczytywanie notatek</strong> – narzędzie zamieniające zdjęcie pisma odręcznego na tekst.</li>
+    </ul>
+   </li>
+   <li>Korzystanie z Platformy oznacza akceptację Regulaminu.</li>
+  </ol>
+
+  <h2>§ 2. Usługi</h2>
+  <ol>
+   <li>Za pośrednictwem Platformy Usługodawca świadczy drogą elektroniczną usługi: prowadzenia Konta, sprzedaży Testów, Generatora notatek oraz Rozczytywania notatek.</li>
+   <li>Zakres, ceny i dostępność poszczególnych usług są podane na Platformie i mogą się zmieniać. Zmiana nie wpływa na zamówienia już opłacone.</li>
+   <li>Wymagania techniczne: urządzenie z dostępem do internetu, aktualna przeglądarka z włączoną obsługą JavaScript i plików cookie oraz aktywny adres e-mail.</li>
+  </ol>
+
+  <h2>§ 3. Konto użytkownika</h2>
+  <ol>
+   <li>Aby kupować Testy i korzystać z narzędzi, trzeba założyć Konto. Rejestracja jest bezpłatna.</li>
+   <li>Podczas rejestracji Użytkownik podaje prawdziwe dane, akceptuje Regulamin i zapoznaje się z Polityką prywatności.</li>
+   <li>Z Platformy mogą korzystać osoby niepełnoletnie. Osoba, która nie ukończyła 18 lat, korzysta z płatnych usług za zgodą rodzica lub opiekuna prawnego, a w zakresie zawierania umów w granicach przepisów prawa.</li>
+   <li>Użytkownik chroni dane logowania i nie udostępnia ich innym osobom. Konto jest przypisane do jednej osoby.</li>
+   <li>Użytkownik może w każdej chwili usunąć Konto, pisząc na adres <mark>kontakt.eduportal@outlook.com</mark></li>
+  </ol>
+
+  <h2>§ 4. Zamówienia i płatności</h2>
+  <ol>
+   <li>Ceny podane na Platformie są cenami brutto w złotych polskich.</li>
+   <li>Zamówienie składa się, wybierając Test i potwierdzając zakup. Umowa zostaje zawarta w chwili złożenia zamówienia z obowiązkiem zapłaty.</li>
+   <li>Płatności są realizowane przez zewnętrznego operatora: <mark>[nazwa operatora płatności]</mark>. Dostęp do Testu następuje po zaksięgowaniu płatności.</li>
+   <li>Zamówione Testy są dostępne w zakładce „Zamówienia” w sekcji „Mój Eduportal”.</li>
+  </ol>
+
+  <h2>§ 5. Odstąpienie od umowy</h2>
+  <ol>
+   <li>Konsument ma prawo odstąpić od umowy zawartej na odległość w ciągu 14 dni bez podawania przyczyny, z zastrzeżeniem ust. 2.</li>
+   <li>Prawo odstąpienia nie przysługuje w odniesieniu do treści cyfrowych niedostarczanych na nośniku materialnym, jeżeli spełnianie świadczenia rozpoczęło się za wyraźną zgodą konsumenta przed upływem terminu na odstąpienie, a konsument został poinformowany o utracie tego prawa. Przed zakupem Testu Platforma prosi o takie potwierdzenie.</li>
+   <li>Oświadczenie o odstąpieniu można przesłać na adres <mark>kontakt.eduportal@outlook.com</mark>.</li>
+  </ol>
+
+  <h2>§ 6. Reklamacje</h2>
+  <ol>
+   <li>Reklamację można złożyć e-mailem na adres <mark>kontakt.eduportal@outlook.com</mark>. Prosimy o opis problemu, dane z zamówienia i adres e-mail do kontaktu.</li>
+   <li>Usługodawca odpowiada na reklamację w terminie 14 dni od jej otrzymania.</li>
+   <li>Treść cyfrowa i usługi cyfrowe powinny być zgodne z umową. Konsumentowi przysługują uprawnienia wynikające z przepisów o zgodności treści lub usługi cyfrowej z umową.</li>
+  </ol>
+
+  <h2>§ 7. Generator notatek i rozczytywanie</h2>
+  <ol>
+   <li>Notatki i rozczytane teksty są tworzone automatycznie. Mogą zawierać błędy, uproszczenia lub nieścisłości.</li>
+   <li>Notatki mają wspierać naukę własną i nie zastępują podręcznika ani zajęć. Użytkownik sam sprawdza ich poprawność, zanim się na nich oprzyje.</li>
+   <li>Wgrywając zdjęcie, Użytkownik oświadcza, że ma prawo z niego korzystać. Nie wgrywa zdjęć zawierających dane osobowe innych osób ani treści bezprawnych.</li>
+   <li>Użytkownik zachowuje prawa do własnych notatek i zdjęć. Usługodawca przetwarza je wyłącznie w zakresie potrzebnym do działania usługi, zgodnie z Polityką prywatności.</li>
+  </ol>
+
+  <h2>§ 8. Prawa autorskie i zasady korzystania z Testów</h2>
+  <ol>
+   <li>Testy i inne materiały na Platformie są chronione prawem autorskim. Zakup daje Użytkownikowi niewyłączną licencję do użytku osobistego, do celów nauki.</li>
+   <li>Zabrania się kopiowania, odsprzedawania, publikowania i udostępniania Testów innym osobom.</li>
+   <li>Testy są materiałami do ćwiczeń. Użytkownik odpowiada za to, by korzystać z nich zgodnie z zasadami obowiązującymi w jego szkole.</li>
+   <li>Nazwa, logo i szata graficzna Platformy są własnością marki Rakso.</li>
+  </ol>
+
+  <h2>§ 9. Zakazane działania</h2>
+  <ol>
+   <li>Użytkownik nie może: podejmować prób nieuprawnionego dostępu do Platformy lub cudzych kont, zakłócać jej działania, automatycznie pobierać treści, udostępniać swojego Konta ani wykorzystywać Platformy sprzecznie z prawem.</li>
+   <li>Usługodawca może zablokować Konto Użytkownika, który narusza Regulamin, po uprzednim wezwaniu do zaprzestania naruszeń, a w poważnych przypadkach – bez wezwania.</li>
+  </ol>
+
+  <h2>§ 10. Odpowiedzialność</h2>
+  <ol>
+   <li>Usługodawca dokłada starań, aby Platforma działała nieprzerwanie, ale może okresowo być niedostępna z powodu prac technicznych lub awarii.</li>
+   <li>Usługodawca nie odpowiada za wyniki nauki ani oceny uzyskane przez Użytkownika.</li>
+   <li>Ograniczenia odpowiedzialności nie dotyczą konsumentów w zakresie, w jakim wyłączają je bezwzględnie obowiązujące przepisy.</li>
+  </ol>
+
+  <h2>§ 11. Zmiany Regulaminu</h2>
+  <ol>
+   <li>Usługodawca może zmienić Regulamin z ważnych powodów, np. zmiany prawa, zakresu usług lub względów technicznych.</li>
+   <li>O zmianie Użytkownicy z Kontem są informowani e-mailem lub komunikatem na Platformie co najmniej <mark>14</mark> dni przed wejściem zmian w życie. Zamówienia złożone wcześniej realizuje się na dotychczasowych zasadach.</li>
+  </ol>
+
+  <h2>§ 12. Postanowienia końcowe</h2>
+  <ol>
+   <li>Do umów z Użytkownikami stosuje się prawo polskie. Nie pozbawia to konsumenta ochrony wynikającej z obowiązujących go przepisów.</li>
+   <li>Konsument może skorzystać z pozasądowych metod rozstrzygania sporów oraz z pomocy powiatowego (miejskiego) rzecznika konsumentów.</li>
+   <li>Regulamin wchodzi w życie z dniem <mark>[data]</mark>.</li>
+  </ol>
+ </section>
+
+ <!-- ===================== POLITYKA PRYWATNOŚCI ===================== -->
+ <section class="view" id="prywatnosc">
+  <p class="note">Tu wyjaśniamy, jakie dane zbieramy, po co i jakie masz prawa. Przetwarzamy tylko to, co potrzebne do działania Eduportal.</p>
+
+  <h2>1. Kto jest administratorem danych</h2>
+  <p>Administratorem Twoich danych osobowych jest <mark>RAKSO Web Dewelopment</mark> z siedzibą w Warszawie. Skontaktujesz się z nami pod adresem <mark>kontakt.raksowd@rakso.int.pl</mark>.</p>
+
+  <h2>2. Jakie dane przetwarzamy</h2>
+  <ul>
+   <li><strong>Dane konta:</strong> imię, adres e-mail, hasło (przechowywane w postaci zaszyfrowanej).</li>
+   <li><strong>Dane zamówień:</strong> historia zakupów, kwoty, status płatności. Danych karty nie widzimy, obsługuje je operator płatności.</li>
+   <li><strong>Treści wgrywane przez Ciebie:</strong> tematy notatek, zdjęcia zeszytów i teksty z nich rozczytane, zapisane notatki.</li>
+   <li><strong>Dane techniczne:</strong> adres IP, typ przeglądarki i urządzenia, dzienniki serwera, pliki cookie.</li>
+   <li><strong>Korespondencja:</strong> wiadomości, które do nas wysyłasz.</li>
+  </ul>
+
+  <h2>3. Po co i na jakiej podstawie</h2>
+  <ul>
+   <li><strong>Założenie i obsługa konta, realizacja zamówień, działanie narzędzi</strong> – niezbędność do wykonania umowy (art. 6 ust. 1 lit. b RODO).</li>
+   <li><strong>Rachunkowość i podatki</strong> – obowiązek prawny (art. 6 ust. 1 lit. c RODO).</li>
+   <li><strong>Bezpieczeństwo, zapobieganie nadużyciom, dochodzenie roszczeń, statystyki</strong> – prawnie uzasadniony interes administratora (art. 6 ust. 1 lit. f RODO).</li>
+   <li><strong>Niezbędne i opcjonalne pliki cookie</strong> – Twoja zgoda (art. 6 ust. 1 lit. a RODO), jeśli jest wymagana.</li>
+  </ul>
+
+  <h2>4. Jak długo przechowujemy dane</h2>
+  <ul>
+   <li>Dane konta – do czasu usunięcia konta.</li>
+   <li>Zdjęcia wgrywane do rozczytania – <mark>do 30 dni, lub do usunięcia przez Ciebie</mark>.</li>
+   <li>Dane potrzebne do obrony przed roszczeniami – do czasu ich przedawnienia.</li>
+  </ul>
+
+  <h2>5. Komu przekazujemy dane</h2>
+  <p>Dane mogą trafiać do podmiotów, które pomagają nam prowadzić Platformę, na podstawie umów powierzenia:</p>
+  <ul>
+   <li>dostawcy hostingu i infrastruktury: <mark>CloudFlare, SupaBase</mark>;</li>
+   <li>operatora płatności: <mark>Stripe</mark>;</li>
+   <li>dostawcy usług generowania notatek i rozpoznawania tekstu: <mark>OpenAi</mark>;</li>
+   <li>dostawcy poczty e-mail:<mark>Microsoft</mark>.</li>
+  </ul>
+  <p>Jeśli któryś z dostawców jest poza Europejskim Obszarem Gospodarczym, stosujemy zabezpieczenia wymagane przez RODO, np. standardowe klauzule umowne. Nie sprzedajemy danych.</p>
+
+  <h2>6. Twoje prawa</h2>
+  <ul>
+   <li>dostępu do danych i otrzymania ich kopii;</li>
+   <li>sprostowania danych;</li>
+   <li>usunięcia danych („prawo do bycia zapomnianym”);</li>
+   <li>ograniczenia przetwarzania;</li>
+   <li>przenoszenia danych;</li>
+   <li>sprzeciwu wobec przetwarzania opartego na prawnie uzasadnionym interesie;</li>
+   <li>cofnięcia zgody w dowolnym momencie (bez wpływu na zgodność z prawem wcześniejszego przetwarzania);</li>
+   <li>wniesienia skargi do Prezesa Urzędu Ochrony Danych Osobowych (ul. Stawki 2, 00-193 Warszawa).</li>
+  </ul>
+  <p>Aby skorzystać z praw, napisz na <mark>[adres e-mail]</mark>. Odpowiemy w ciągu miesiąca.</p>
+
+  <h2>7. Pliki cookie</h2>
+  <p>Używamy plików cookie niezbędnych do logowania i działania Platformy. <mark>[Jeśli używasz analityki lub marketingu: opisz je tutaj i dodaj baner zgody.]</mark> Pliki cookie możesz usunąć lub zablokować w ustawieniach przeglądarki, co może ograniczyć działanie niektórych funkcji.</p>
+
+  <h2>8. Bezpieczeństwo</h2>
+  <p>Chronimy dane m.in. szyfrowaniem połączenia (HTTPS), szyfrowaniem haseł, ograniczeniem dostępu do danych i kopiami zapasowymi. Żaden system nie jest w pełni bezpieczny, dlatego prosimy o używanie unikalnego hasła.</p>
+
+  <h2>9. Osoby niepełnoletnie</h2>
+  <p>Z Platformy mogą korzystać uczniowie. W przypadku osób, które nie ukończyły <mark>[16]</mark> lat, przetwarzanie danych na podstawie zgody wymaga zgody rodzica lub opiekuna prawnego. Prosimy, aby w zdjęciach notatek nie przesyłać danych innych osób.</p>
+
+  <h2>10. Zmiany polityki</h2>
+  <p>Możemy aktualizować tę politykę, np. gdy zmienią się nasze usługi lub przepisy. Aktualna wersja jest zawsze dostępna na tej stronie, a o istotnych zmianach poinformujemy Cię e-mailem lub komunikatem na Platformie.</p>
+
+  <h2>11. Kontakt</h2>
+  <p>Pytania o prywatność: <mark>kontakt.eduportal@outlook.com</mark>.</p>
+ </section>
+
+ </div>
+</div>
+
+<footer><div class="foot">
+ <div class="brand"><span>Własność marki</span><img src="https://platforma-eduportal.pages.dev/themes/logo_rakso_szerokie.svg" alt="Rakso"></div>
+ <span>© 2026 EDUPortal. Wszelkie prawa zastrzeżone.</span>
+</div></footer>
+
+<script>
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const views = $$('.view'), tabs = $$('#tabs a'), pill = $('#pill'), toc = $('#toc');
+let spy;
+
+function movePill() {
+  const on = $('#tabs a.on'); if (!on) return;
+  pill.style.width = on.offsetWidth + 'px';
+  pill.style.transform = `translateX(${on.offsetLeft - 4}px)`;
+}
+
+function show() {
+  const id = location.hash.slice(1);
+  const v = views.find(x => x.id === id) || views[0];
+  views.forEach(x => x.classList.remove('active'));
+  void v.offsetWidth;
+  v.classList.add('active');
+  tabs.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + v.id));
+  document.title = (v.id === 'regulamin' ? 'Regulamin' : 'Polityka prywatności') + ' – Eduportal';
+  movePill();
+  buildToc(v);
+  scrollTo({ top: 0 });
+}
+
+function buildToc(v) {
+  const hs = $$('h2', v);
+  hs.forEach((h, i) => h.id = h.id || `${v.id}-${i + 1}`);
+  toc.innerHTML = hs.map(h => `<a href="#${h.id}" data-id="${h.id}">${h.textContent}</a>`).join('');
+  spy?.disconnect();
+  spy = new IntersectionObserver(es => {
+    es.forEach(e => { if (e.isIntersecting) $$('a', toc).forEach(a => a.classList.toggle('on', a.dataset.id === e.target.id)); });
+  }, { rootMargin: '-90px 0px -70% 0px' });
+  hs.forEach(h => spy.observe(h));
+}
+
+toc.addEventListener('click', e => {
+  const a = e.target.closest('a'); if (!a) return;
+  e.preventDefault();
+  document.getElementById(a.dataset.id).scrollIntoView({ behavior: 'smooth' });
+});
+
+addEventListener('hashchange', show);
+addEventListener('resize', movePill);
+document.fonts?.ready.then(movePill);
+show();
+</script>
+</body>
+</html>
