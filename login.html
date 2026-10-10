@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Eduportal – logowanie</title>
+<title>EDUPortal – logowanie</title>
 <meta name="robots" content="noindex">
 <link rel="icon" type="image/svg+xml" href="https://platforma-eduportal.pages.dev/themes/faviconeduportal.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -68,8 +68,36 @@ input[aria-invalid=true]{border-color:var(--err)}
  main{align-items:flex-start;padding-top:36px}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+.side small img{filter:brightness(0) invert(1)}
+
 .view{display:none}
 .view.active{display:block}
+.view.active .anim{opacity:0;animation:rise .6s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(var(--i,0)*70ms + 60ms)}
+@keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+.view.active.from-right .anim{animation-name:riseR}
+.view.active.from-left .anim{animation-name:riseL}
+@keyframes riseR{from{opacity:0;transform:translateX(34px)}to{opacity:1;transform:none}}
+@keyframes riseL{from{opacity:0;transform:translateX(-34px)}to{opacity:1;transform:none}}
+
+.side::before{transition:transform 1s cubic-bezier(.2,.8,.2,1),opacity .6s}
+body[data-v="rejestracja"] .side::before{transform:translate(-120px,-90px) scale(1.25)}
+body[data-v="reset-hasla"] .side::before{transform:translate(-40px,-200px) scale(.8);opacity:.75}
+#side-text.swap{animation:sideIn .7s cubic-bezier(.2,.8,.2,1)}
+@keyframes sideIn{from{opacity:0;transform:translateY(16px);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+
+.field label{transition:color .25s,transform .25s;transform-origin:left}
+.field:focus-within label{color:var(--accent);transform:translateX(3px)}
+input:focus{transform:translateY(-1px)}
+input{transition:border-color .25s,box-shadow .25s,transform .25s}
+.btn{transition:border-color .35s,transform .2s}
+.btn:active{transform:scale(.97)}
+.check input:checked{animation:pop .35s cubic-bezier(.3,1.6,.5,1)}
+@keyframes pop{50%{transform:scale(1.35)}}
+.msg.show{animation:pop-in .5s cubic-bezier(.3,1.4,.5,1)}
+@keyframes pop-in{from{opacity:0;transform:translateY(-10px) scale(.96)}to{opacity:1;transform:none}}
+.shake{animation:shake .45s}
+@keyframes shake{20%{transform:translateX(-8px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(3px)}}
+@media(prefers-reduced-motion:reduce){.view.active .anim{opacity:1;animation:none}*{animation:none!important}}
 </style>
 </head>
 <body>
@@ -82,7 +110,6 @@ input[aria-invalid=true]{border-color:var(--err)}
 
 <main><div class="box">
 
- <!-- LOGOWANIE -->
  <section class="view" id="logowanie" data-title="Logowanie" data-side="Wróć do nauki tam, gdzie skończyłeś.">
   <h1>Zaloguj się</h1>
   <p class="sub">Twoje testy i notatki czekają na koncie.</p>
@@ -101,7 +128,6 @@ input[aria-invalid=true]{border-color:var(--err)}
   <p class="alt">Nie masz konta? <a class="link" href="#rejestracja">Załóż konto</a></p>
  </section>
 
- <!-- REJESTRACJA -->
  <section class="view" id="rejestracja" data-title="Rejestracja" data-side="Załóż konto i ucz się mądrzej.">
   <h1>Załóż konto</h1>
   <p class="sub">Zajmie Ci to minutę.</p>
@@ -129,7 +155,6 @@ input[aria-invalid=true]{border-color:var(--err)}
   <p class="alt">Masz już konto? <a class="link" href="#logowanie">Zaloguj się</a></p>
  </section>
 
- <!-- RESET HASŁA -->
  <section class="view" id="reset-hasla" data-title="Resetowanie hasła" data-side="Każdemu zdarza się zapomnieć hasło.">
   <h1>Zresetuj hasło</h1>
   <p class="sub">Podaj e-mail, a wyślemy Ci link do ustawienia nowego hasła.</p>
@@ -147,14 +172,24 @@ input[aria-invalid=true]{border-color:var(--err)}
 </div></main>
 
 <script>
-/* TEMPLATE – tylko interfejs. Podłącz własną logikę w miejscach oznaczonych TODO. */
 const views = [...document.querySelectorAll('.view')];
+const order = views.map(v => v.id);
+let current = null;
 function show(){
   const id = location.hash.slice(1);
   const v = views.find(x => x.id === id) || views[0];
-  views.forEach(x => x.classList.toggle('active', x === v));
+  const dir = current === null ? '' : (order.indexOf(v.id) > order.indexOf(current) ? 'from-right' : 'from-left');
+  views.forEach(x => { x.classList.remove('active','from-right','from-left'); });
+  const items = [...v.children].flatMap(el => el.tagName === 'FORM' ? [...el.children] : [el]);
+  items.forEach((el, i) => { el.classList.add('anim'); el.style.setProperty('--i', i); });
+  void v.offsetWidth;
+  v.classList.add('active'); if (dir) v.classList.add(dir);
+  document.body.dataset.v = v.id;
   document.title = v.dataset.title + ' – Eduportal';
-  document.getElementById('side-text').textContent = v.dataset.side;
+  const t = document.getElementById('side-text');
+  t.textContent = v.dataset.side;
+  t.classList.remove('swap'); void t.offsetWidth; t.classList.add('swap');
+  current = v.id;
 }
 addEventListener('hashchange', show); show();
 
@@ -167,14 +202,12 @@ document.querySelectorAll('.eye').forEach(b => b.addEventListener('click', () =>
 document.querySelectorAll('form').forEach(f => f.addEventListener('submit', e => {
   e.preventDefault();
   if (f.id === 'reset-form') {
-    document.getElementById('reset-msg').classList.add('show'); // TODO: wyślij e-mail resetujący
+    document.getElementById('reset-msg').classList.add('show'); 
     f.reset();
   } else if (f.closest('#rejestracja')) {
     const [a, b] = [f.querySelector('#r-pass'), f.querySelector('#r-pass2')];
-    if (a.value !== b.value) { b.setCustomValidity('Hasła muszą być takie same.'); b.reportValidity(); b.setCustomValidity(''); return; }
-    // TODO: rejestracja
+    if (a.value !== b.value) { b.setCustomValidity('Hasła muszą być takie same.'); b.reportValidity(); b.setCustomValidity(''); b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake'); return; }
   } else {
-    // TODO: logowanie
   }
 }));
 </script>
