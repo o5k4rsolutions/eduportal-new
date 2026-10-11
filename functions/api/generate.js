@@ -7,7 +7,7 @@ export async function onRequestPost({ request, env }) {
   if (typeof topic !== 'string' || !topic.trim() || topic.length > 200) return json({ error: 'Podaj temat (maks. 200 znaków).' }, 400);
   if (!env.gemini_api) return json({ error: 'Brak klucza gemini_api na serwerze.' }, 500);
 
-  const model = env.GEMINI_MODEL || 'gemini-2.5-flash';
+  const model = env.GEMINI_MODEL || 'gemini-3.8-flash';
   const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'x-goog-api-key': env.gemini_api },
