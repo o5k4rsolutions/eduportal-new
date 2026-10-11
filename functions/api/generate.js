@@ -1,29 +1,36 @@
 const json = (o, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { 'Content-Type': 'application/json' } });
 const LEN = { 'Krótka': 'ok. 120–180 słów', 'Średnia': 'ok. 250–350 słów', 'Szczegółowa': 'ok. 500–700 słów' };
-const SYSTEM = 'Jesteś doświadczonym nauczycielem. Piszesz po polsku zwięzłe, rzetelne notatki do nauki dla uczniów. Używaj wyłącznie czystego tekstu – bez składni Markdown (bez #, ** i tabel). Zacznij od krótkiego tytułu, potem sekcje z krótkimi nagłówkami, a punkty zaczynaj od „• ”. Nie wymyślaj faktów; jeśli czegoś nie jesteś pewien, pomiń to.';
+const SYSTEM = 'Jesteś doświadczonym nauczycielem. Piszesz po polsku zwięzłe, rzetelne notatki do nauki dla uczniów. Używaj wyłącznie czystego tekstu – bez składni Markdown (bez #, ** i tabel). Zacznij od krótkiego tytułu, potem sekcje z krótkimi nagłówkami, a punkty zaczynaj od „• ”. Nie wymyślaj faktów; jeśli czegoś nie jesteś pewien, pomiń to. Pisz poprawną polszczyzną.';
+
+async function run(env, model, input) {
+  try { return await env.AI.run(model, input); }
+  catch (e) {
+    if (/agree|license|5016/i.test(String(e.message))) {
+      await env.AI.run(model, { prompt: 'agree' }).catch(() => {});
+      return await env.AI.run(model, input);
+    }
+    throw e;
+  }
+}
 
 export async function onRequestPost({ request, env }) {
   const { topic, subject, length } = await request.json().catch(() => ({}));
   if (typeof topic !== 'string' || !topic.trim() || topic.length > 200) return json({ error: 'Podaj temat (maks. 200 znaków).' }, 400);
-  if (!env.gemini_api) return json({ error: 'Brak klucza gemini_api na serwerze.' }, 500);
+  if (!env.AI) return json({ error: 'Brak powiązania AI w Cloudflare (Settings → Bindings → Workers AI, nazwa: AI).' }, 500);
 
-  const model = env.GEMINI_MODEL || 'gemini-3.8-flash';
-  const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-goog-api-key': env.gemini_api },
-    body: JSON.stringify({
-      systemInstruction: { parts: [{ text: SYSTEM }] },
-      contents: [{ role: 'user', parts: [{ text: `Przedmiot: ${String(subject || '').slice(0, 40)}\nTemat: ${topic.trim()}\nDługość: ${LEN[length] || LEN['Średnia']}` }] }],
-      generationConfig: { temperature: 0.4, maxOutputTokens: 4000 }
-    })
-  });
-  if (!r.ok) {
-    const e = await r.json().catch(() => ({}));
-    const why = e.error?.message || ('HTTP ' + r.status);
-    console.error('Gemini', r.status, why);
-    return json({ error: 'Nie udało się wygenerować notatki. (Gemini: ' + why.slice(0, 160) + ')' }, 502);
+  try {
+    const out = await run(env, env.AI_TEXT_MODEL || '@cf/meta/llama-3.2-11b-vision-instruct', {
+      messages: [
+        { role: 'system', content: SYSTEM },
+        { role: 'user', content: `Przedmiot: ${String(subject || '').slice(0, 40)}\nTemat: ${topic.trim()}\nDługość: ${LEN[length] || LEN['Średnia']}` }
+      ],
+      max_tokens: 1800,
+      temperature: 0.4
+    });
+    const text = (out?.response ?? out?.choices?.[0]?.message?.content ?? '').toString().trim();
+    return text ? json({ text }) : json({ error: 'Pusta odpowiedź. Spróbuj ponownie.' }, 502);
+  } catch (e) {
+    console.error('WorkersAI', e.message);
+    return json({ error: 'Nie udało się wygenerować notatki. (AI: ' + String(e.message).slice(0, 160) + ')' }, 502);
   }
-  const out = await r.json();
-  const text = (out.candidates?.[0]?.content?.parts || []).map(p => p.text || '').join('').trim();
-  return text ? json({ text }) : json({ error: 'Pusta odpowiedź (mogła zostać zablokowana). Spróbuj zmienić temat.' }, 502);
 }
