@@ -176,8 +176,11 @@ textarea{resize:vertical;min-height:110px}
 .saved .meta{color:var(--mute);font-size:13px}
 .saved p.open{color:var(--ink)}
 .saved .acts{display:flex;gap:8px;margin-top:6px}
-.src{font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;background:var(--soft);color:var(--mute);align-self:start}
-@media(max-width:860px){.sk-row{grid-template-columns:1fr 90px}.dl{grid-template-columns:1fr;gap:2px}.dl dd{margin-bottom:8px}}
+.src{font-size:12px;...align-self:start}
+@media(max-width:860px){.sk-row{...}.dl{...}.dl dd{margin-bottom:8px}}
+
+.beta{display:flex;gap:12px;align-items:flex-start;max-width:640px;margin:-16px 0 24px;padding:14px 18px;border-radius:16px;background:#4b3bff0f;color:#3a2fd0;font-size:15px;font-weight:500;line-height:1.5}
+.beta b{flex:none;font-size:12px;font-weight:800;letter-spacing:.06em;padding:3px 10px;border-radius:999px;color:#fff;background:linear-gradient(90deg,var(--accent),var(--accent2))}
 
 @media(max-width:860px){
  body{grid-template-columns:1fr;padding-bottom:76px}
@@ -281,6 +284,10 @@ textarea{resize:vertical;min-height:110px}
  <section class="view" id="rozczytywanie">
   <h1>Rozczytaj notatki</h1>
   <p class="lead">Wgraj zdjęcie zeszytu, a zamienimy pismo na tekst, który da się przeczytać.</p>
+  <div class="beta" role="note">
+  <b>BETA</b>
+  <span>Funkcje AI są w fazie testów i mogą być błędne. Zawsze sprawdzaj wynik pod kątem błędów, zanim zaczniesz się z niego uczyć lub zapiszesz go w notatkach. Zwłaszcza daty, wzory i nazwy własne.</span>
+</div>
   <label class="drop" id="drop">
    <svg viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 001 1h14a1 1 0 001-1v-3"/></svg>
    <b>Przeciągnij zdjęcie tutaj</b><span>albo kliknij, aby wybrać plik (JPG, PNG)</span>
