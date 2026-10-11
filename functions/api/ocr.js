@@ -8,7 +8,7 @@ export async function onRequestPost({ request, env }) {
   if (image.length > 9_000_000) return json({ error: 'Zdjęcie jest za duże.' }, 413);
   if (!env.gemini_api) return json({ error: 'Brak klucza gemini_api na serwerze.' }, 500);
 
-  const model = env.GEMINI_MODEL || 'gemini-2.5-flash';
+  const model = env.GEMINI_MODEL || 'gemini-3.8-flash';
   const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'x-goog-api-key': env.gemini_api },
