@@ -433,10 +433,10 @@ const om=$('#order-modal');let omOrder=null;
 function openOrder(o){
   omOrder=o;const s=EP.ST[o.status];
   const msg={
-    new:['','Zgłoszenie dotarło do administracji. Odezwiemy się, gdy je rozpatrzymy.'],
+    new:['','Zgłoszenie zamówienia dotarło do administracji. Odezwiemy się, gdy je rozpatrzymy.'],
     pending_payment:['wait','Nasz zespół wysłał do Ciebie wiadomość z danymi do wpłaty. Po uregulowaniu płatności otrzymasz dostęp do plików.'],
-    completed:['ok','Twoje pliki są gotowe.'],
-    cancelled:['','To zamówienie zostało anulowane.']
+    completed:['ok','Zamówienie zostało pomyślnie zrealizowane. Kliknij przycisk poniżej, aby pobrać swoje pliki.'],
+    cancelled:['','Zamówienie zostało anulowane na Twoją prośbę lub z powodu braku wybranego produktu. Prosimy o sprawdzenie skrzynki e-mail, gdzie mogły zostać przesłane dodatkowe informacje.']
   }[o.status];
   $('#om-body').innerHTML=`<span class="badge ${s.cls}">${s.label}</span><h2>${esc(o.book)}</h2>
    <dl class="dl"><dt>Typ szkoły</dt><dd>${esc(o.school_type)}</dd><dt>Klasa</dt><dd>${esc(o.class_name)}</dd><dt>Dział</dt><dd>${esc(o.section)}</dd>${o.topics?`<dt>Tematy</dt><dd>${esc(o.topics)}</dd>`:''}<dt>Złożono</dt><dd>${fmt(o.created_at)}</dd></dl>
@@ -453,9 +453,9 @@ $('#om-dl').addEventListener('click',async e=>{
   const b=e.currentTarget,o=omOrder;b.disabled=true;b.textContent='Przygotowuję…';
   const name='eduportal-'+o.book.toLowerCase().replace(/[^a-z0-9ąćęłńóśźż]+/gi,'-').slice(0,40)+'.zip';
   const {data,error}=await sb.storage.from('deliveries').createSignedUrl(o.zip_path,120,{download:name});
-  if(error){toast('Nie udało się pobrać pliku. Spróbuj ponownie.');b.disabled=false;b.textContent='Pobierz ZIP';return}
+  if(error){toast('Nie udało się pobrać pliku. Spróbuj ponownie.');b.disabled=false;b.textContent='Pobierz pliki';return}
   location.href=data.signedUrl;
-  setTimeout(()=>{b.disabled=false;b.textContent='Pobierz ZIP'},2500);
+  setTimeout(()=>{b.disabled=false;b.textContent='Pobierz pliki'},2500);
 });
 
 $('#ord-form').addEventListener('submit',async e=>{
